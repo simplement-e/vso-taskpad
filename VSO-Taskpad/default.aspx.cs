@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimplementE.VisualStudio.TaskPad.Business;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,13 @@ namespace VSO_Taskpad
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if(!IsPostBack)
+            {
+                var cred = new VsoBasicCredentials();
+                string url = VsoWebServiceHelper.FormatUrl("simplement-e", "https://{account}.visualstudio.com/defaultcollection/_apis/projects?api-version=1.0-preview");
+                string s = VsoWebServiceHelper.Raw(cred, url);
+                lt.Text = s;
+            }
         }
     }
 }
