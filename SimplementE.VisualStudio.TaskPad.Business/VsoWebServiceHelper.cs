@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -16,6 +18,9 @@ namespace SimplementE.VisualStudio.TaskPad.Business
     /// </summary>
     public abstract class VsoWebServiceCredentials
     {
+        private string _account;
+
+        public string Account { get; internal set; }
         /// <summary>
         /// Overrides this to provides credentials to the underlying web service request
         /// </summary>
@@ -26,7 +31,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
     /// <summary>
     /// Basic (alternate) credentials for VSO
     /// </summary>
-    public sealed class VsoBasicCredentials : VsoWebServiceCredentials
+    [Serializable]
+    public sealed class VsoBasicCredentials : VsoWebServiceCredentials, ISerializable
     {
         private string _username;
         private string _password;
@@ -34,16 +40,19 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         /// <summary>
         /// Creates an instance of the <see cref="VsoBasicCredentials"/> class using appsettings
         /// </summary>
-        /// <remarks>The following settings are used :
+        /// <remarks><para>This constructor is for use on dev stations or on-premise deployments</para> 
+        /// <para>The following settings are used :
         /// <list type="table">
         /// <item><term>vso-username</term><description>the username</description></item>
         /// <item><term>vso-password</term><description>the password</description></item>
-        /// </list></remarks>
+        /// </list></para>
+        /// </remarks>
         public VsoBasicCredentials()
         {
             var cfg = ConfigurationManager.AppSettings;
             _username = cfg.Get("vso-username");
             _password = cfg.Get("vso-password");
+            Account = cfg.Get("vso-account");
 #if DEBUG
             try
             {
@@ -52,7 +61,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 {
                     pth = HttpContext.Current.Request.MapPath("~/TestCreds.xml");
                 }
-                
+
                 if (File.Exists(pth))
                 {
                     XmlDocument doc = new XmlDocument();
@@ -64,7 +73,11 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                         _username = elmU.InnerText;
                         _password = elmP.InnerText;
                     }
-
+                    elmU = doc.SelectSingleNode("/Credentials/Account") as XmlElement;
+                    if (elmU != null)
+                    {
+                        Account = elmU.InnerText;
+                    }
                 }
             }
             catch
@@ -91,9 +104,36 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         /// <param name="client">The Web service request to authenticate</param>
         protected internal override void AddAuth(HttpWebRequest client)
         {
+
+
             String encoded = System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(_username + ":" + _password));
             client.Headers.Add("Authorization", "Basic " + encoded);
         }
+
+        internal VsoBasicCredentials(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException("info");
+
+            _username = info.GetString("Username");
+            _password = info.GetString("Password");
+        }
+
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException("info");
+
+            info.AddValue("Username", _username);
+            info.AddValue("Password", _password);
+        }
+    }
+
+    [Serializable]
+    public class VsoJsonResult<T>
+    {
+        public T value { get; set; }
     }
 
     /// <summary>
@@ -137,6 +177,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             if (string.IsNullOrEmpty(verb))
                 verb = "GET";
 
+            url = FormatUrl(credentials.Account, url);
+
             HttpWebResponse rsp = null;
             HttpWebRequest req = HttpWebRequest.Create(url) as HttpWebRequest;
             req.Method = verb;
@@ -151,6 +193,13 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 throw;
             }
         }
+
+        public static VsoJsonResult<T> Call<T>(VsoWebServiceCredentials credentials, string url, string verb = "GET")
+        {
+            string s = Raw(credentials, url, verb);
+            return JsonConvert.DeserializeObject<VsoJsonResult<T>>(s);
+        }
+
 
         /// <summary>
         /// Sync call to a VSO webservice
@@ -167,6 +216,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 throw new ArgumentNullException("credentials");
             if (string.IsNullOrEmpty(verb))
                 verb = "GET";
+
+            url = FormatUrl(credentials.Account, url);
 
             HttpWebResponse rsp = null;
             HttpWebRequest req = HttpWebRequest.Create(url) as HttpWebRequest;

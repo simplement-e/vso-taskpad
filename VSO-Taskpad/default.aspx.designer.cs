@@ -13,12 +13,12 @@ namespace VSO_Taskpad {
     public partial class _default {
         
         /// <summary>
-        /// Contrôle lt.
+        /// Contrôle rptProjects.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal lt;
+        protected global::System.Web.UI.WebControls.Repeater rptProjects;
     }
 }
