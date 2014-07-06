@@ -16,7 +16,7 @@ namespace VSO_Taskpad
             if(!IsPostBack)
             {
                 var cred = new VsoBasicCredentials();
-                var r = Projects.GetProjects(cred);
+                var r = WorkItems.GetBacklog(cred, "");
                 rptProjects.DataSource = r;
                 rptProjects.DataBind();
             }

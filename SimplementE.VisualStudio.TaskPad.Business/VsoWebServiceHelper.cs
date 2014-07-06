@@ -208,7 +208,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         /// <param name="url">url to call</param>
         /// <param name="verb">http verb to use</param>
         /// <returns>The unparsed string returned by the service</returns>
-        public static string Raw(VsoWebServiceCredentials credentials, string url, string verb = "GET")
+        public static string Raw(VsoWebServiceCredentials credentials, string url, string verb = "GET", string body = null)
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -216,17 +216,43 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 throw new ArgumentNullException("credentials");
             if (string.IsNullOrEmpty(verb))
                 verb = "GET";
+            if (!string.IsNullOrEmpty(body) && verb.Equals("GET"))
+                throw new InvalidOperationException("Can't GET if you have a request body to send.");
+
 
             url = FormatUrl(credentials.Account, url);
 
             HttpWebResponse rsp = null;
             HttpWebRequest req = HttpWebRequest.Create(url) as HttpWebRequest;
+            //req.TransferEncoding = "UTF8";
             req.Method = verb;
+            if (!string.IsNullOrEmpty(body))
+            {
+                using (var s = req.GetRequestStream())
+                {
+                    var bs = Encoding.UTF8.GetBytes(body);
+                    s.Write(bs, 0, bs.Length);
+                }
+            }
             credentials.AddAuth(req);
             try
             {
                 rsp = req.GetResponse() as HttpWebResponse;
                 return ParseResponse(rsp);
+            }
+            catch (WebException e)
+            {
+                if(e.Response.ContentLength>0)
+                {
+                    if (!e.Response.ContentType.StartsWith("text") && !e.Response.ContentType.StartsWith("application/json"))
+                        throw;
+                    using(var r = new StreamReader(e.Response.GetResponseStream()))
+                    {
+                        string msg = r.ReadToEnd();
+                        throw new ApplicationException(msg);
+                    }
+                }
+                throw;
             }
             catch (Exception)
             {
