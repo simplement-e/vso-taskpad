@@ -226,6 +226,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             HttpWebRequest req = HttpWebRequest.Create(url) as HttpWebRequest;
             //req.TransferEncoding = "UTF8";
             req.Method = verb;
+            req.ContentType = "application/json";
             if (!string.IsNullOrEmpty(body))
             {
                 using (var s = req.GetRequestStream())

@@ -18,8 +18,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
         public static WorkItem[] GetBacklog(VsoWebServiceCredentials cred, string project)
         {
             StringBuilder blr = new StringBuilder();
-            blr.Append("select [System.Id],[System.WorkItemType],[System.Title],[System.State],");
-            blr.Append("[Microsoft.VSTS.Scheduling.Effort],[System.IterationPath],[System.AreaPath]");
+            blr.Append("select [System.Id]");
             blr.Append(" From WorkItem where [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory'");
             blr.Append(" and [System.State] IN ('New','Approved','Committed')");
             var qry = new WiqlQuery() { wiql = blr.ToString() };
