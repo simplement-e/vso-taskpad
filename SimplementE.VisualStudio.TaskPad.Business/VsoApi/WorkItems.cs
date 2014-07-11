@@ -23,6 +23,34 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
         }
 
         [Serializable]
+        private class GetItemsResult
+        {
+            public WorkItemData[] value { get; set; }
+        }
+
+        [Serializable]
+        private class WorkItemData
+        {
+            public int id { get; set; }
+            public int rev { get; set; }
+            public FieldData[] fields { get; set; }
+        }
+
+        [Serializable]
+        private class FieldData
+        {
+            public string value { get; set; }
+            public FieldDesc field { get; set; }
+        }
+
+        [Serializable]
+        private class FieldDesc
+        {
+            public string id { get; set; }
+            public string refName { get; set; }
+        }
+
+        [Serializable]
         private class WiqlQuery
         {
             public string wiql { get; set; }
@@ -36,7 +64,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
             var qry = new WiqlQuery() { wiql = blr.ToString() };
 
             var r = VsoWebServiceHelper.Raw(cred,
-                "https://{account}.visualstudio.com/defaultcollection/_apis/wit/queryresults?api-version=1.0-preview", 
+                "https://{account}.visualstudio.com/defaultcollection/_apis/wit/queryresults?api-version=1.0-preview",
                 "POST", JsonConvert.SerializeObject(qry));
 
             QueryResult res = JsonConvert.DeserializeObject<QueryResult>(r);
@@ -45,7 +73,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
 
             string fields = "System.Id";
 
-            while(res.results.Count>0)
+            while (res.results.Count > 0)
             {
                 blr = new StringBuilder();
                 for (int i = 0; i < 200 && res.results.Count > 0; i++)
@@ -58,9 +86,12 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
 
                 r = VsoWebServiceHelper.Raw(cred,
                     "https://{account}.visualstudio.com/defaultcollection/_apis/wit/workitems?ids="
-                    + blr.ToString() +  " &api-version=1.0-preview",
+                    + blr.ToString() + " &api-version=1.0-preview",
     "GET");
                 //+ "&fields=" + fields 
+
+                GetItemsResult gi = JsonConvert.DeserializeObject<GetItemsResult>(r);
+
             }
 
             return ret.ToArray();
