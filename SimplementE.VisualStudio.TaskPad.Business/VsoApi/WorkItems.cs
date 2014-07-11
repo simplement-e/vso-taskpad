@@ -91,10 +91,44 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
                 //+ "&fields=" + fields 
 
                 GetItemsResult gi = JsonConvert.DeserializeObject<GetItemsResult>(r);
-
+                foreach(var it in gi.value)
+                {
+                    var newit = ConvertToWorkItem(it);
+                    if(newit!=null)
+                        ret.Add(newit);
+                }
             }
 
             return ret.ToArray();
+        }
+
+        private static WorkItem ConvertToWorkItem(WorkItemData it)
+        {
+            string typ = ((from z in it.fields
+                       where z.field.refName.Equals("System.WorkItemType", StringComparison.InvariantCultureIgnoreCase)
+                       select z).FirstOrDefault().value);
+            if (string.IsNullOrEmpty(typ))
+                return null;
+
+            WorkItem wk = null;
+
+            switch(typ.ToLower())
+            {
+                case "product backlog item":
+                    wk = new ProductBacklogItem();
+                    break;
+                case "bug":
+                    wk = new BugItem();
+                    break;
+            }
+            if (wk != null)
+            {
+                typ = ((from z in it.fields
+                        where z.field.refName.Equals("System.Title", StringComparison.InvariantCultureIgnoreCase)
+                        select z).FirstOrDefault().value);
+                wk.label = typ;
+            }
+            return wk;
         }
     }
 

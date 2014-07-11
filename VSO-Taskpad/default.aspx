@@ -5,7 +5,7 @@
 
     <asp:Repeater runat="server" ID="rptProjects">
         <ItemTemplate>
-            <p><asp:Label runat="server" Text='<%# Eval("name") %>' /> : <asp:Label runat="server" Text='<%# Eval("id") %>' />
+            <p><asp:Label runat="server" Text='<%# Eval("label") %>' /> <%--: <asp:Label runat="server" Text='<%# Eval("id") %>' />--%>
                 <%--<asp:HyperLink text="GO" runat="server" NavigateUrl='<%# Eval("url") %>' />--%>
             </p>
 
