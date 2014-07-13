@@ -1,4 +1,4 @@
 vso-taskpad
 ===========
 
-A task list for managing vso tasks
+A few tools for managing work-items on visualtudio.com. 
