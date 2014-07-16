@@ -55,16 +55,29 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
         {
             public string wiql { get; set; }
         }
-        public static WorkItem[] GetBacklog(VsoWebServiceCredentials cred, string project)
+
+        public static WorkItem[] GetBacklog(VsoWebServiceCredentials cred, string project = null)
         {
             StringBuilder blr = new StringBuilder();
             blr.Append("select [System.Id]");
             blr.Append(" From WorkItem where [System.WorkItemType] IN GROUP 'Microsoft.RequirementCategory'");
             blr.Append(" and [System.State] IN ('New','Approved','Committed')");
-            var qry = new WiqlQuery() { wiql = blr.ToString() };
+            if (!string.IsNullOrEmpty(project))
+                blr.Append(" and [System.TeamProject] = @project");
+            return GetWorkItemsFromQuery(cred, blr.ToString(), project);
+        }
+
+        private static WorkItem[] GetWorkItemsFromQuery(VsoWebServiceCredentials cred, string queryString, string project = null)
+        {
+            var qry = new WiqlQuery() { wiql = queryString };
+
+
+            var url = "https://{account}.visualstudio.com/defaultcollection/_apis/wit/queryresults?api-version=1.0-preview";
+            if(!string.IsNullOrEmpty(project))
+                url += "&@project=" + Uri.EscapeUriString(project);
 
             var r = VsoWebServiceHelper.Raw(cred,
-                "https://{account}.visualstudio.com/defaultcollection/_apis/wit/queryresults?api-version=1.0-preview",
+                url,
                 "POST", JsonConvert.SerializeObject(qry));
 
             QueryResult res = JsonConvert.DeserializeObject<QueryResult>(r);
@@ -75,7 +88,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
 
             while (res.results.Count > 0)
             {
-                blr = new StringBuilder();
+                StringBuilder blr = new StringBuilder();
                 for (int i = 0; i < 200 && res.results.Count > 0; i++)
                 {
                     if (i != 0)
@@ -91,10 +104,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
                 //+ "&fields=" + fields 
 
                 GetItemsResult gi = JsonConvert.DeserializeObject<GetItemsResult>(r);
-                foreach(var it in gi.value)
+                foreach (var it in gi.value)
                 {
                     var newit = ConvertToWorkItem(it);
-                    if(newit!=null)
+                    if (newit != null)
                         ret.Add(newit);
                 }
             }
