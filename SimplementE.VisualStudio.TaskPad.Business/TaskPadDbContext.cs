@@ -10,7 +10,7 @@
     using System.Xml;
     using System.Configuration;
 
-    public class TaskPadDbContext : DbContext
+    internal class TaskPadDbContext : DbContext
     {
         private static string _cnString = null;
         internal static string FromSettings()

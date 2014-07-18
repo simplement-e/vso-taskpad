@@ -15,13 +15,6 @@ namespace VSO_Taskpad
         {
             if(!IsPostBack)
             {
-                using (var t = TaskPadDbContext.Get())
-                {
-                    foreach (var z in t.Tenants)
-                        Trace.Write(z.Name);
-                    t.SaveChanges();
-                }
-
                 var cred = new VsoBasicCredentials();
                 var r = WorkItems.GetBacklog(cred, "Equihira");
                 rptProjects.DataSource = r;
