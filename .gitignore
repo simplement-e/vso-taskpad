@@ -173,3 +173,4 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 /VSO-Taskpad/TestCreds.xml
+VSO-Taskpad/Connections.xml

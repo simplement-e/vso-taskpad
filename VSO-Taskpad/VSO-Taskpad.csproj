@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\default.aspx" />
+    <Content Include="Connections.xml" />
     <Content Include="Taskpad.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -94,7 +95,6 @@
     <Content Include="default.aspx" />
     <Content Include="packages.config" />
     <Content Include="app\vsocallback.ashx" />
-    <None Include="TestCreds.xml" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
