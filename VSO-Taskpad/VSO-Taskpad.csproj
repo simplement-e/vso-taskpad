@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\default.aspx" />
+    <Content Include="Global.asax" />
     <Content Include="Taskpad.Master" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -93,7 +94,6 @@
   <ItemGroup>
     <Content Include="default.aspx" />
     <Content Include="packages.config" />
-    <Content Include="app\vsocallback.ashx" />
     <None Include="TestCreds.xml" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -105,15 +105,17 @@
     <Compile Include="app\default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
     </Compile>
-    <Compile Include="app\vsocallback.ashx.cs">
-      <DependentUpon>vsocallback.ashx</DependentUpon>
-    </Compile>
+    <Compile Include="app\WorkItems.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="default.aspx.cs">
       <DependentUpon>default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="default.aspx.designer.cs">
       <DependentUpon>default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Taskpad.Master.cs">

@@ -140,6 +140,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
                         where z.field.refName.Equals("System.Title", StringComparison.InvariantCultureIgnoreCase)
                         select z).FirstOrDefault().value);
                 wk.label = typ;
+                typ = ((from z in it.fields
+                        where z.field.refName.Equals("System.IterationPath", StringComparison.InvariantCultureIgnoreCase)
+                        select z).FirstOrDefault().value);
+                wk.iterationPath = typ;
             }
             return wk;
         }
@@ -147,6 +151,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
 
     public class WorkItem
     {
+        public string iterationPath { get; set; }
         public string label { get; set; }
         public int id { get; set; }
         public string type { get; set; }

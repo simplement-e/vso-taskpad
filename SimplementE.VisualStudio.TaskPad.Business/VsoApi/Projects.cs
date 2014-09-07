@@ -22,4 +22,13 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
         public Guid id { get; set; }
         public string url { get; set; }
     }
+
+    [Serializable]
+    public class ProjectIteration
+    {
+        public string name { get; set; }
+        public Guid id { get; set; }
+        public string url { get; set; }
+    }
+
 }
