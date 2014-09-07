@@ -14,9 +14,6 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 {
     partial class ExternalAuthService 
     {
-        internal static string clientKey = "00000000480E6D67";
-        internal static string clientSecret = "Udrf1b6c4fWRCbCx9iCBb76cB9sAZh2z";
-
         public class VisualStudioOAuthStart : IHttpHandler, IRequiresSessionState
         {
             public bool IsReusable
@@ -32,10 +29,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
                 string dt = CreateNewCSRFToken();
                 StringBuilder blr = new StringBuilder();
-                blr.Append("https://app.vssps.visualstudio.com/oauth2/authorize?mkt=fr-FR&client_id=");
-                blr.Append(clientKey);
-                blr.Append("&response_type=Assertionscope=preview_api_all%20preview_msdn_licensing");
-                blr.Append("&response_type=code&redirect_uri=");
+                blr.Append("https://app.vssps.visualstudio.com/oauth2/authorize?client_id=");
+                blr.Append(MyConnectionStrings.VisualStudioAppId);
+                blr.Append("&response_type=Assertion&scope=preview_api_all%20preview_msdn_licensing");
+                blr.Append("&redirect_uri=");
                 StringBuilder blrUri = new StringBuilder();
                 blrUri.Append(urlPrincipale);
                 blrUri.Append("oauth/vstudio/process/");
@@ -74,12 +71,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
                 TokenResponse token = GetTokenFromCode(code, urlPrincipale, blrUri.ToString(), context); ;
 
-                context.Session["wl.currentScopes"] = token.scope;
-
                 if (string.IsNullOrEmpty(token.access_token))
                     context.Response.Redirect("~/oauthError.aspx?error=Token%20invalide");
 
-                // GetClientInfo(context, token.access_token, context.Request["state"]);
+                // do something with the token...
             }
 
             [DataContract]
@@ -90,7 +85,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 [DataMember]
                 public string expires_in { get; set; }
                 [DataMember]
-                public string scope { get; set; }
+                public string refresh_token { get; set; }
                 [DataMember]
                 public string access_token { get; set; }
             }
@@ -102,17 +97,18 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                     HttpWebRequest rq = HttpWebRequest.Create("https://app.vssps.visualstudio.com/oauth2/token") as HttpWebRequest;
                     rq.Method = "POST";
                     rq.ContentType = "application/x-www-form-urlencoded";
+
                     StringBuilder blr = new StringBuilder();
-                    blr.Append("?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+                    blr.Append("client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
                     blr.Append("&client_assertion=");
-                    blr.Append(clientSecret);
+                    blr.Append(MyConnectionStrings.VisualStudioAppSecret);
                     blr.Append("&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer");
                     blr.Append("&assertion=");
                     blr.Append(code);
 
                     StringBuilder blrUri = new StringBuilder();
                     blrUri.Append(urlPrincipale);
-                    blrUri.Append("oauth/msaccount/process/");
+                    blrUri.Append("oauth/vstudio/process/");
 
                     blr.Append("&redirect_uri=");
                     blr.Append(blrUri.ToString());
@@ -129,6 +125,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                     stIn.Close();
 
                     TokenResponse tk = JsonConvert.DeserializeObject<TokenResponse>(st);
+                    context.Response.Write(JsonConvert.SerializeObject(tk));
                     return tk;
                 }
                 catch(Exception ex)

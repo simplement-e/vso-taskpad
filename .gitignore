@@ -174,3 +174,4 @@ UpgradeLog*.htm
 FakesAssemblies/
 /VSO-Taskpad/TestCreds.xml
 VSO-Taskpad/Connections.xml
+VSO-Taskpad/Properties/PublishProfiles/vso-taskpad.pubxml
