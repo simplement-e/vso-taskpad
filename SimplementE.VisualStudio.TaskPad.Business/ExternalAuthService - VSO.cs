@@ -74,7 +74,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 if (string.IsNullOrEmpty(token.access_token))
                     context.Response.Redirect("~/oauthError.aspx?error=Token%20invalide");
 
-                // do something with the token...
+                context.Session["auth"] = new VsoOauthCredentials(token.access_token);
+                context.Response.Redirect("~/");
             }
 
             [DataContract]
