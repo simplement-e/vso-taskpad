@@ -130,6 +130,60 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         }
     }
 
+    /// <summary>
+    /// Basic (alternate) credentials for VSO
+    /// </summary>
+    [Serializable]
+    public sealed class VsoOauthCredentials : VsoWebServiceCredentials, ISerializable
+    {
+        private string _bearer = null;
+        /// <summary>
+        /// Creates an instance of the <see cref="VsoBasicCredentials"/> class using appsettings
+        /// </summary>
+        /// <remarks><para>This constructor is for use on dev stations or on-premise deployments</para> 
+        /// <para>The following settings are used :
+        /// <list type="table">
+        /// <item><term>vso-username</term><description>the username</description></item>
+        /// <item><term>vso-password</term><description>the password</description></item>
+        /// </list></para>
+        /// </remarks>
+        public VsoOauthCredentials(string bearerToken)
+        {
+            var cfg = ConfigurationManager.AppSettings;
+            _bearer = bearerToken;
+            Account = "simplement-e";
+        }
+
+      
+
+        /// <summary>
+        /// Overrides this to provides credentials to the underlying web service request
+        /// </summary>
+        /// <param name="client">The Web service request to authenticate</param>
+        protected internal override void AddAuth(HttpWebRequest client)
+        {
+            client.Headers.Add("Authorization", "Bearer " + _bearer);
+        }
+
+        internal VsoOauthCredentials(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException("info");
+
+            _bearer = info.GetString("bearer");
+        }
+
+
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException("info");
+
+            info.AddValue("bearer", _bearer);
+        }
+    }
+
+
     [Serializable]
     public class VsoJsonResult<T>
     {

@@ -15,10 +15,17 @@ namespace VSO_Taskpad
         {
             if(!IsPostBack)
             {
-                var cred = new VsoBasicCredentials();
-                var r = WorkItems.GetBacklog(cred, "Equihira");
-                rptProjects.DataSource = r;
-                rptProjects.DataBind();
+                if (Session["auth"] != null)
+                {
+                    VsoOauthCredentials cred = Session["auth"] as VsoOauthCredentials;
+                    var r = WorkItems.GetBacklog(cred, "Equihira");
+                    rptProjects.DataSource = r;
+                    rptProjects.DataBind();
+                }
+                else
+                {
+                    Response.Redirect("~/oauth/vstudio/start/");
+                }
             }
         }
     }
