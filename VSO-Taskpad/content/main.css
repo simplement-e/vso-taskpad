@@ -1,0 +1,41 @@
+﻿body {
+    font-family:Arial, Helvetica, sans-serif;
+    margin:0;
+    padding:0;
+}
+
+input[disabled=disabled], a[disabled=disabled], button[disabled=disabled] {
+    pointer-events:none;
+    opacity:0.5;
+}
+
+button {
+    background:#4282c2;
+    color:#efefef;
+    padding:5px 20px;
+    border:none;
+    cursor:pointer;
+}
+
+    button:hover {
+        background:#2262A2;
+    }
+
+
+header[role=main] {
+    background:#29293C;
+    height:50px;
+    color:#efefef;
+}
+
+header[role=main] .login{
+    padding:18px 0 0 10px;
+    font-size:12px;
+}
+
+section[role=main] {
+    padding:10px;
+}
+
+.mainLogin {}
+

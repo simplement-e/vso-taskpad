@@ -155,6 +155,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         }
 
       
+        public void ChangeAccount(string newAccount)
+        {
+            Account = newAccount;
+        }
 
         /// <summary>
         /// Overrides this to provides credentials to the underlying web service request

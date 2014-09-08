@@ -63,10 +63,10 @@
       <DependentUpon>ExternalAuthService.cs</DependentUpon>
     </Compile>
     <Compile Include="ExternalAuthService.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="MyConnectionStrings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TaskPadDbContext.cs" />
+    <Compile Include="VsoApi\Profiles.cs" />
     <Compile Include="VsoApi\Projects.cs" />
     <Compile Include="VsoApi\WorkItems.cs" />
     <Compile Include="VsoWebServiceHelper.cs" />

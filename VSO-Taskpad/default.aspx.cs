@@ -15,16 +15,29 @@ namespace VSO_Taskpad
         {
             if(!IsPostBack)
             {
-                if (Session["auth"] != null)
+                //if (Session["auth"] != null)
+                //{
+                //    VsoOauthCredentials cred = Session["auth"] as VsoOauthCredentials;
+                //    var r = WorkItems.GetBacklog(cred, "Equihira");
+                //    rptProjects.DataSource = r;
+                //    rptProjects.DataBind();
+                //}
+                //else
+                //{
+                //    Response.Redirect("~/oauth/vstudio/start/");
+                //}
+
+                if(!User.Identity.IsAuthenticated)
                 {
-                    VsoOauthCredentials cred = Session["auth"] as VsoOauthCredentials;
-                    var r = WorkItems.GetBacklog(cred, "Equihira");
-                    rptProjects.DataSource = r;
-                    rptProjects.DataBind();
+                    mvAuth.SetActiveView(vwNotAuth);
+                }
+                else if (Session["auth"]==null)
+                {
+                    mvAuth.SetActiveView(vwAuthNoVso);
                 }
                 else
                 {
-                    Response.Redirect("~/oauth/vstudio/start/");
+                    mvAuth.SetActiveView(vwAuth);
                 }
             }
         }

@@ -25,7 +25,11 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             {
                 string urlPrincipale = GetRootUrl(context);
 
-                string moreScopes = null;
+                if(!context.User.Identity.IsAuthenticated)
+                {
+                    context.Response.Redirect("~/", false);
+                    return;
+                }
 
                 string dt = CreateNewCSRFToken();
                 StringBuilder blr = new StringBuilder();
@@ -53,6 +57,12 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 string urlPrincipale = GetRootUrl(context);
                 context.Response.ContentType = "text/plain";
 
+                if (!context.User.Identity.IsAuthenticated)
+                {
+                    context.Response.Redirect("~/", false);
+                    return;
+                }
+
                 string error = context.Request["error"];
                 if (!string.IsNullOrWhiteSpace(error))
                 {
@@ -74,12 +84,18 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 if (string.IsNullOrEmpty(token.access_token))
                     context.Response.Redirect("~/oauthError.aspx?error=Token%20invalide");
 
+                AccountsBll.RefreshTokens(context.User.Identity.Name, token.access_token, token.refresh_token);
+
                 context.Session["auth"] = new VsoOauthCredentials(token.access_token);
+                
+                
                 context.Response.Redirect("~/");
+
+
             }
 
             [DataContract]
-            private class TokenResponse
+            public class TokenResponse
             {
                 [DataMember]
                 public string token_type { get; set; }
@@ -163,6 +179,43 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 {
                     return false;
                 }
+            }
+
+            public static TokenResponse RefreshToken(string refreshToken)
+            {
+                string urlPrincipale = GetRootUrl(HttpContext.Current);
+                HttpWebRequest rq = HttpWebRequest.Create("https://app.vssps.visualstudio.com/oauth2/token") as HttpWebRequest;
+                rq.Method = "POST";
+                rq.ContentType = "application/x-www-form-urlencoded";
+
+                StringBuilder blr = new StringBuilder();
+                blr.Append("client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer");
+                blr.Append("&client_assertion=");
+                blr.Append(MyConnectionStrings.VisualStudioAppSecret);
+                blr.Append("&grant_type=refresh_token");
+                blr.Append("&assertion=");
+                blr.Append(refreshToken);
+
+                StringBuilder blrUri = new StringBuilder();
+                blrUri.Append(urlPrincipale);
+                blrUri.Append("oauth/vstudio/process/");
+
+                blr.Append("&redirect_uri=");
+                blr.Append(blrUri.ToString());
+
+                string st = blr.ToString();
+                rq.ContentLength = st.Length;
+
+                StreamWriter stOut = new StreamWriter(rq.GetRequestStream(), System.Text.Encoding.ASCII);
+                stOut.Write(st);
+                stOut.Close();
+
+                StreamReader stIn = new StreamReader(rq.GetResponse().GetResponseStream());
+                st = stIn.ReadToEnd();
+                stIn.Close();
+
+                TokenResponse tk = JsonConvert.DeserializeObject<TokenResponse>(st);
+                return tk;                
             }
         }
     }

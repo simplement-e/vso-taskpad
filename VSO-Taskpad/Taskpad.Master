@@ -1,21 +1,30 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Taskpad.master.cs" Inherits="VSO_Taskpad.Taskpad" %>
 
+<%@ Register Src="~/HeaderControl.ascx" TagPrefix="uc1" TagName="HeaderControl" %>
+
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
+
+    <script type="text/javascript" src="/Scripts/jquery-2.1.1.min.js"></script>
+    <script src="/Scripts/toastr.min.js"></script>
+    <link href="content/main.css" rel="stylesheet" />
+    <link href="content/toastr.min.css" rel="stylesheet" />
+
 </head>
 <body>
-    <form id="form1" runat="server">
-    <div>
+
+    <uc1:HeaderControl runat="server" ID="HeaderControl" />
+
+    <section role="main">
         <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
-        
         </asp:ContentPlaceHolder>
-    </div>
-    </form>
+    </section>
 </body>
 </html>

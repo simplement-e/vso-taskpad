@@ -13,12 +13,39 @@ namespace VSO_Taskpad {
     public partial class _default {
         
         /// <summary>
-        /// Contrôle rptProjects.
+        /// Contrôle mvAuth.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptProjects;
+        protected global::System.Web.UI.WebControls.MultiView mvAuth;
+        
+        /// <summary>
+        /// Contrôle vwNotAuth.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.View vwNotAuth;
+        
+        /// <summary>
+        /// Contrôle vwAuthNoVso.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.View vwAuthNoVso;
+        
+        /// <summary>
+        /// Contrôle vwAuth.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.View vwAuth;
     }
 }

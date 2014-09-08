@@ -15,40 +15,7 @@
         private static string _cnString = null;
         internal static string FromSettings()
         {
-            if (_cnString != null)
-                return _cnString;
-#if DEBUG
-            try
-            {
-                string pth = "TestCreds.xml";
-                if (HttpContext.Current != null)
-                {
-                    pth = HttpContext.Current.Request.MapPath("~/TestCreds.xml");
-                }
-
-                if (File.Exists(pth))
-                {
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(pth);
-                    XmlElement elmC = doc.SelectSingleNode("/Credentials/ConnectionString") as XmlElement;
-                    if (elmC != null)
-                    {
-                        _cnString = elmC.InnerText;
-                    }
-                }
-            }
-            catch
-            {
-
-            }
-#else
-            try {
-            _cnString = ConfigurationManager.ConnectionStrings[0].ConnectionString;
-            }
-            catch {
-            }
-#endif
-
+            _cnString = MyConnectionStrings.Database;
             if (_cnString == null)
                 throw new ApplicationException("Invalid Config");
             return _cnString;
@@ -85,14 +52,40 @@
         // Ajoutez un DbSet pour chaque type d'entité à inclure dans votre modèle. Pour plus d'informations 
         // sur la configuration et l'utilisation du modèle Code First, consultez http://go.microsoft.com/fwlink/?LinkId=390109.
 
-        public virtual DbSet<Tenants> Tenants { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserVsoAccount> UserVsoAccounts { get; set; }
     }
 
-    public class Tenants
+    public class User
     {
         [Key]
         public Guid Guid { get; set; }
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string Password { get; set; }
+        [Required]
         public string Name { get; set; }
-        public string Tenant { get; set; }
+
+        public string VsoAccessToken { get; set; }
+        public string VsoRefreshToken { get; set; }
+        public Guid LastUserVsoAccountGuid { get; set; }
+
+        //public virtual UserVsoAccount LastUserVsoAccount { get; set; }
+    }
+
+    public class UserVsoAccount
+    {
+        [Key]
+        public Guid Guid { get; set; }
+        [Required]
+        public Guid UserGuid { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public string Label { get; set; }
+
+        //public virtual User User { get; set; }
+
     }
 }
