@@ -141,7 +141,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                     }
                     catch(ApplicationException)
                     {
-                        AccountsBll.RefreshTokens(usr.Name, null, null, 0);
+                        AccountsBll.RefreshTokens(usr.Email, null, null, 0);
                     }
                 }
             }
