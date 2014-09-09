@@ -13,7 +13,7 @@ namespace VSO_Taskpad
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(!IsPostBack)
+            if (!IsPostBack)
             {
                 //if (Session["auth"] != null)
                 //{
@@ -27,17 +27,21 @@ namespace VSO_Taskpad
                 //    Response.Redirect("~/oauth/vstudio/start/");
                 //}
 
-                if(!User.Identity.IsAuthenticated)
+                if (!User.Identity.IsAuthenticated)
                 {
                     mvAuth.SetActiveView(vwNotAuth);
+                    Title = "vso-taskpad : work items made easy";
                 }
-                else if (Session["auth"]==null)
+                else if (Session["auth"] == null)
                 {
                     mvAuth.SetActiveView(vwAuthNoVso);
+                    Title = "vso-taskpad - not connected to vso ";
+
                 }
                 else
                 {
                     mvAuth.SetActiveView(vwAuth);
+                    Title = "vso-taskpad : work items made easy";
                 }
             }
         }

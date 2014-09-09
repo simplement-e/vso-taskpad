@@ -18,12 +18,14 @@ namespace VSO_Taskpad
     {
         public static void PreStartupApplication()
         {
-            DynamicModuleUtility.RegisterModule(typeof(ExternalAuthService));
+            DynamicModuleUtility.RegisterModule(typeof(AuthService));
         }
 
         protected void Application_Start(object sender, EventArgs e)
         {
             GlobalConfiguration.Configure(App_Start.WebApiConfig.Register);
+            App_Start.RouteConfig.Register();
+
         }
 
         protected void Application_PostAcquireRequestState(object sender, EventArgs e)

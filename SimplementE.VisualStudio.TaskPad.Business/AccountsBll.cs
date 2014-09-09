@@ -30,8 +30,9 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             return null;
         }
 
-        public static void RefreshTokens(string username, string accessToken, string refreshToken)
+        public static void RefreshTokens(string username, string accessToken, string refreshToken, int ttl)
         {
+            DateTimeOffset off = DateTimeOffset.Now.AddSeconds(ttl);
             username = username.ToLower();
             using (var db = TaskPadDbContext.Get())
             {
@@ -42,6 +43,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 {
                     usr.VsoAccessToken = accessToken;
                     usr.VsoRefreshToken = refreshToken;
+                    usr.VsoAccessTokenExpiration = off;
                     db.SaveChanges();
                 }
             }
@@ -111,5 +113,69 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             return null;
         }
 
+
+        public static void RefreshAccounts(Guid userId, IEnumerable<VsoApi.Profiles.Account> accounts)
+        {
+            using (var db = TaskPadDbContext.Get())
+            {
+
+                var knowns = (from z in db.UserVsoAccounts
+                           where z.UserGuid.Equals(userId)
+                           select z).ToList();
+
+                var names = (from z in knowns
+                             select z.Name).ToList();
+
+                var lesNew = (from z in accounts
+                              where !names.Contains(z.name)
+                              select z).ToList();
+                var lesBoth = (from z in accounts
+                              where names.Contains(z.name)
+                              select z).ToList();
+                
+                names = (from z in accounts
+                         select z.name).ToList();
+
+                var lesDels = (from z in knowns
+                               where !names.Contains(z.Name)
+                               select z).ToList();
+
+                foreach(var l in lesDels)
+                {
+                    db.Projects.RemoveRange(from z in db.Projects
+                                             where z.AccountGuid.Equals(l.Guid)
+                                             select z);
+                    db.UserVsoAccounts.Remove(l);
+                }
+
+
+                foreach(var l in lesNew)
+                {
+                    UserVsoAccount acc = new UserVsoAccount()
+                    {
+                        Guid = l.id,
+                        Label = l.name,
+                        UserGuid = userId,
+                        Name = l.name
+                    };
+                    db.UserVsoAccounts.Add(acc);
+                } 
+
+                foreach(var l in lesBoth)
+                {
+                    var old = (from z in knowns
+                               where z.Name.Equals(l.name)
+                               select z).FirstOrDefault();
+                    if (old == null)
+                        continue;
+                    
+                    old.Label = l.name;
+                }
+
+                db.SaveChanges();
+            }
+
+
+        }
     }
 }

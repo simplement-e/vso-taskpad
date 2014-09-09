@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace SimplementE.VisualStudio.TaskPad.Business
 {
-    partial class ExternalAuthService 
+    partial class AuthService
     {
         public class VisualStudioOAuthStart : IHttpHandler, IRequiresSessionState
         {
@@ -25,7 +25,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             {
                 string urlPrincipale = GetRootUrl(context);
 
-                if(!context.User.Identity.IsAuthenticated)
+                if (!context.User.Identity.IsAuthenticated)
                 {
                     context.Response.Redirect("~/", false);
                     return;
@@ -66,7 +66,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 string error = context.Request["error"];
                 if (!string.IsNullOrWhiteSpace(error))
                 {
-                    context.Response.Redirect("~/oauthError.aspx?error=" + HttpUtility.UrlEncode(error));
+                    context.Response.Redirect("~/oauthError.aspx?kind=" + HttpUtility.UrlEncode(error));
                     return;
                 }
 
@@ -77,18 +77,18 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
                 StringBuilder blrUri = new StringBuilder();
                 blrUri.Append(urlPrincipale);
-                blrUri.Append("oauth/msaccount/process/");
+                blrUri.Append("oauth/vstudio/process/");
 
                 TokenResponse token = GetTokenFromCode(code, urlPrincipale, blrUri.ToString(), context); ;
 
                 if (string.IsNullOrEmpty(token.access_token))
-                    context.Response.Redirect("~/oauthError.aspx?error=Token%20invalide");
+                    context.Response.Redirect("~/oauthError.aspx?kind=access_denied");
 
-                AccountsBll.RefreshTokens(context.User.Identity.Name, token.access_token, token.refresh_token);
+                AccountsBll.RefreshTokens(context.User.Identity.Name, token.access_token, token.refresh_token, token.expires_in);
 
                 context.Session["auth"] = new VsoOauthCredentials(token.access_token);
-                
-                
+
+
                 context.Response.Redirect("~/");
 
 
@@ -100,7 +100,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 [DataMember]
                 public string token_type { get; set; }
                 [DataMember]
-                public string expires_in { get; set; }
+                public int expires_in { get; set; }
                 [DataMember]
                 public string refresh_token { get; set; }
                 [DataMember]
@@ -142,10 +142,9 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                     stIn.Close();
 
                     TokenResponse tk = JsonConvert.DeserializeObject<TokenResponse>(st);
-                    context.Response.Write(JsonConvert.SerializeObject(tk));
                     return tk;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                 }
 
@@ -170,7 +169,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 public string link { get; set; }
             }
 
-          
+
 
 
             public bool IsReusable
@@ -210,12 +209,31 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 stOut.Write(st);
                 stOut.Close();
 
-                StreamReader stIn = new StreamReader(rq.GetResponse().GetResponseStream());
-                st = stIn.ReadToEnd();
-                stIn.Close();
+                try
+                {
+                    WebResponse resp = rq.GetResponse() as WebResponse;
+                    using (StreamReader stIn = new StreamReader(resp.GetResponseStream()))
+                    {
+                        st = stIn.ReadToEnd();
+                        stIn.Close();
+                    }
+                }
+                catch (WebException ex)
+                {
+                    if (ex.Response.ContentLength > 0)
+                    {
+                        using (StreamReader stIn = new StreamReader(ex.Response.GetResponseStream()))
+                        {
+                            string err = stIn.ReadToEnd();
+                            throw new ApplicationException(err);
+                        }
 
+                    }
+                }
                 TokenResponse tk = JsonConvert.DeserializeObject<TokenResponse>(st);
-                return tk;                
+
+
+                return tk;
             }
         }
     }

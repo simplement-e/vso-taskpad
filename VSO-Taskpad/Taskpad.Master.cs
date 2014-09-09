@@ -11,6 +11,21 @@ namespace VSO_Taskpad
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if(Session["auth"]==null)
+            {
+                string url = Page.Request.RawUrl.ToLower();
+                url = VirtualPathUtility.ToAppRelative(url);
+                if (url.StartsWith("~/account/"))
+                    return;
+
+                if (Page is _default)
+                    return;
+
+                if (Page is OAuthError)
+                    return;
+
+                Response.Redirect("~/");
+            }
 
         }
     }

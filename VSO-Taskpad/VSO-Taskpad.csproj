@@ -85,15 +85,23 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Account\Default.aspx" />
+    <Content Include="Account\RefreshData.aspx" />
+    <Content Include="App\Backlog.aspx" />
+    <Content Include="App\Bugs.aspx" />
+    <Content Include="App\Default.aspx" />
     <Content Include="Connections.xml" />
     <Content Include="content\toastr.css" />
     <Content Include="content\toastr.min.css" />
     <Content Include="Global.asax" />
     <Content Include="content\toastr.scss" />
     <Content Include="content\toastr.less" />
+    <Content Include="App\Web.config" />
+    <Content Include="Account\Web.config" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="HeaderControl.ascx" />
     <Content Include="content\main.css" />
+    <Content Include="OAuthError.aspx" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\toastr.js" />
@@ -115,6 +123,43 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Account\AccountController.cs" />
+    <Compile Include="Account\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Account\RefreshData.aspx.cs">
+      <DependentUpon>RefreshData.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Account\RefreshData.aspx.designer.cs">
+      <DependentUpon>RefreshData.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App\Backlog.aspx.cs">
+      <DependentUpon>Backlog.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App\Backlog.aspx.designer.cs">
+      <DependentUpon>Backlog.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App\Bugs.aspx.cs">
+      <DependentUpon>Bugs.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App\Bugs.aspx.designer.cs">
+      <DependentUpon>Bugs.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Authentication.cs" />
     <Compile Include="default.aspx.cs">
@@ -134,6 +179,16 @@
     <Compile Include="HeaderControl.ascx.designer.cs">
       <DependentUpon>HeaderControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="OAuthError.aspx.cs">
+      <DependentUpon>OAuthError.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="OAuthError.aspx.designer.cs">
+      <DependentUpon>OAuthError.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Taskpad.Master.cs">
       <DependentUpon>Taskpad.Master</DependentUpon>
@@ -149,6 +204,7 @@
       <Name>SimplementE.VisualStudio.TaskPad.Business</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

@@ -14,9 +14,9 @@
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $("#lnkLogin").click(function (e) {
-                            $("#txtLogin").attr("disabled", "disabled");
-                            $("#lnkLogin").attr("disabled", "disabled");
-                            $("#txtPassword").attr("disabled", "disabled");
+                            $(".mainLogin a").attr("disabled", "disabled");
+                            $(".mainLogin input").attr("disabled", "disabled");
+                            $(".mainLogin button").attr("disabled", "disabled");
                             $.ajax({
                                 url: "/api/auth/login", method: 'GET',
                                 data: {
@@ -28,23 +28,25 @@
                                     document.location = "/";
                                 else {
                                     toastr.error("Please check your credentials", "Unable to login", { "positionClass": "toast-top-full-width" });
+                                    $(".mainLogin a").removeAttr("disabled");
+                                    $(".mainLogin input").removeAttr("disabled");
+                                    $(".mainLogin button").removeAttr("disabled");
                                     $("#txtPassword").focus();
                                 }
                             }).fail(function (a, b, c) {
+                                $(".mainLogin a").removeAttr("disabled");
+                                $(".mainLogin input").removeAttr("disabled");
+                                $(".mainLogin button").removeAttr("disabled");
 
                             }).always(function () {
-                                $("#txtLogin").removeAttr("disabled");
-                                $("#lnkLogin").removeAttr("disabled");
-                                $("#txtPassword").removeAttr("disabled");
                             });
 
                         });
 
                         $("#lnkCreate").click(function (e) {
-                            $("#txtCreateName").attr("disabled", "disabled");
-                            $("#txtCreateLogin").attr("disabled", "disabled");
-                            $("#txtCreatePassword").attr("disabled", "disabled");
-                            $("#lnkCreate").attr("disabled", "disabled");
+                            $(".mainLogin a").attr("disabled", "disabled");
+                            $(".mainLogin input").attr("disabled", "disabled");
+                            $(".mainLogin button").attr("disabled", "disabled");
 
                             $.ajax({
                                 url: "/api/auth/create", method: 'GET',
@@ -57,15 +59,15 @@
                                 if (result)
                                     document.location = "/";
                                 else {
-
+                                    $(".mainLogin a").removeAttr("disabled");
+                                    $(".mainLogin input").removeAttr("disabled");
+                                    $(".mainLogin button").removeAttr("disabled");
                                 }
                             }).fail(function (a, b, c) {
-
+                                $(".mainLogin a").removeAttr("disabled");
+                                $(".mainLogin input").removeAttr("disabled");
+                                $(".mainLogin button").removeAttr("disabled");
                             }).always(function () {
-                                $("#txtCreateName").removeAttr("disabled");
-                                $("#txtCreateLogin").removeAttr("disabled");
-                                $("#txtCreatePassword").removeAttr("disabled");
-                                $("#lnkCreate").removeAttr("disabled");
 
                             });
 
@@ -75,16 +77,17 @@
 
                 <form class="login">
                     <h2>Login</h2>
-                    <input type="text" id="txtLogin" placeholder="your email address" />
+                    <input type="email" id="txtLogin" placeholder="your email address" />
                     <input type="password" id="txtPassword" placeholder="your password" />
                     <button id="lnkLogin">Login</button>
                 </form>
 
-                <form class="createAccount">
+                <form class="createAccount" autocomplete="off">
                     <h2>Create an account</h2>
-                    <input type="text" id="txtCreateName" placeholder="your name" />
-                    <input type="text" id="txtCreateLogin" placeholder="your email address" />
-                    <input type="password" id="txtCreatePassword" placeholder="your password" />
+                    <input type="text" id="txtCreateName" autocomplete="off" placeholder="your name" />
+                    <input type="email" id="txtCreateLogin" autocomplete="off" placeholder="your email address" />
+                    <input style="display:none" />
+                    <input type="password" id="txtCreatePassword" autocomplete="off" placeholder="your password" />
                     <button id="lnkCreate">Create account</button>
                 </form>
 

@@ -52,26 +52,56 @@
         // Ajoutez un DbSet pour chaque type d'entité à inclure dans votre modèle. Pour plus d'informations 
         // sur la configuration et l'utilisation du modèle Code First, consultez http://go.microsoft.com/fwlink/?LinkId=390109.
 
+        public virtual DbSet<LostPasswordRequest> LostPasswordRequests { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<OtherIdentity> OtherIdentities { get; set; }
         public virtual DbSet<UserVsoAccount> UserVsoAccounts { get; set; }
+        public virtual DbSet<VsoProject> Projects { get; set; }
+    }
+
+    public class LostPasswordRequest
+    {
+        [Key]
+        public Guid Guid { get; set; }
+        [Required]
+        public Guid UserGuid { get; set; }
+        [Required]
+        public bool Sent { get; set; }
+        [Required]
+        public bool Done { get; set; }
     }
 
     public class User
     {
         [Key]
         public Guid Guid { get; set; }
-        [Required]
+        [Required, MaxLength(250)]
         public string Email { get; set; }
-        [Required]
+        [Required, MaxLength(250)]
         public string Password { get; set; }
-        [Required]
+        [Required, MaxLength(250)]
         public string Name { get; set; }
 
         public string VsoAccessToken { get; set; }
+        public DateTimeOffset VsoAccessTokenExpiration { get; set; }
         public string VsoRefreshToken { get; set; }
         public Guid LastUserVsoAccountGuid { get; set; }
 
         //public virtual UserVsoAccount LastUserVsoAccount { get; set; }
+    }
+
+    public class OtherIdentity
+    {
+        [Key]
+        public Guid Guid { get; set; }
+        [Required]
+        public Guid UserGuid { get; set; }
+        [Required, MaxLength(50)]
+        public string Type { get; set; }
+        [Required]
+        public string Identifiant { get; set; }
+
+        public string TokenData { get; set; }
     }
 
     public class UserVsoAccount
@@ -80,12 +110,28 @@
         public Guid Guid { get; set; }
         [Required]
         public Guid UserGuid { get; set; }
-        [Required]
+        [Required, MaxLength(250)]
         public string Name { get; set; }
-        [Required]
+        [Required, MaxLength(250)]
         public string Label { get; set; }
 
         //public virtual User User { get; set; }
 
     }
+
+    public class VsoProject
+    {
+        [Key]
+        public Guid Guid { get; set; }
+        [Required]
+        public Guid UserGuid { get; set; }
+        [Required]
+        public Guid AccountGuid { get; set; }
+        [Required, MaxLength(250)]
+        public string Name { get; set; }
+        [Required, MaxLength(250)]
+        public string Label { get; set; }
+        public int Index { get; set; }
+    }
+
 }

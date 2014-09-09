@@ -5,6 +5,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Cache;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,11 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         /// </summary>
         /// <param name="client">The Web service request to authenticate</param>
         protected internal abstract void AddAuth(HttpWebRequest client);
+
+        protected virtual bool HandleException(Exception ex)
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -283,7 +289,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             HttpWebResponse rsp = null;
             HttpWebRequest req = HttpWebRequest.Create(url) as HttpWebRequest;
             //req.TransferEncoding = "UTF8";
+            req.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
             req.Method = verb;
+            req.Accept = "application/json";
+            req.AllowAutoRedirect = false;
             req.ContentType = "application/json";
             if (!string.IsNullOrEmpty(body))
             {
@@ -297,11 +306,15 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             try
             {
                 rsp = req.GetResponse() as HttpWebResponse;
+                if(rsp.ContentType.Contains("text/html"))
+                {
+                    throw new WebException("Non json response", null, WebExceptionStatus.UnknownError, rsp);
+                }
                 return ParseResponse(rsp);
             }
             catch (WebException e)
             {
-                if(e.Response.ContentLength>0)
+                if(e.Response!=null && e.Response.ContentLength>0)
                 {
                     if (!e.Response.ContentType.StartsWith("text") && !e.Response.ContentType.StartsWith("application/json"))
                         throw;

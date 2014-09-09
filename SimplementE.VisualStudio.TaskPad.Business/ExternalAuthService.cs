@@ -12,7 +12,7 @@ using System.Web.SessionState;
 
 namespace SimplementE.VisualStudio.TaskPad.Business
 {
-    public partial class ExternalAuthService : IHttpModule
+    public partial class AuthService : IHttpModule
     {
 
         internal static string CreateNewCSRFToken()
@@ -37,6 +37,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
         internal static string GetRootUrl(HttpContext context)
         {
+#if DEBUG
+            // seul vso-taskpad peut fonctionner sur notre version de démo
+            return "https://vso-taskpad.azurewebsites.net/";
+#else
             string urlPrincipale = context.Request.Url.ToString();
             if (urlPrincipale.Contains("?"))
                 urlPrincipale = urlPrincipale.Substring(0, urlPrincipale.IndexOf("?"));
@@ -48,6 +52,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 urlPrincipale = urlPrincipale.Substring(0, urlPrincipale.Length - 1);
 
             return urlPrincipale.ToLower();
+#endif
         }
 
         public void Init(HttpApplication context)
@@ -113,24 +118,31 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
                 if(!string.IsNullOrEmpty(usr.VsoAccessToken))
                 {
-                    try
-                    {
-                        var auth = new VsoOauthCredentials(usr.VsoAccessToken);
-                        var p = Profiles.GetMe(auth);
-                        ctx.Session["auth"] = auth;
-                        return;
-                    }
-                    catch(WebException)
-                    {
+                        try
+                        {
+                            var auth = new VsoOauthCredentials(usr.VsoAccessToken);
+                            var p = Profiles.GetMe(auth);
+                            ctx.Session["auth"] = auth;
+                            return;
+                        }
+                        catch (Exception)
+                        {
 
-                    }
+                        }
                 }
 
                 if (!string.IsNullOrEmpty(usr.VsoRefreshToken))
                 {
-                    var token = ExternalAuthService.VisualStudioOAuthProcess.RefreshToken(usr.VsoRefreshToken);
-                    AccountsBll.RefreshTokens(usr.Name, token.access_token, token.refresh_token);
-                    ctx.Session["auth"] = new VsoOauthCredentials(token.access_token);
+                    try
+                    {
+                        var token = AuthService.VisualStudioOAuthProcess.RefreshToken(usr.VsoRefreshToken);
+                        AccountsBll.RefreshTokens(usr.Email, token.access_token, token.refresh_token, token.expires_in);
+                        ctx.Session["auth"] = new VsoOauthCredentials(token.access_token);
+                    }
+                    catch(ApplicationException)
+                    {
+                        AccountsBll.RefreshTokens(usr.Name, null, null, 0);
+                    }
                 }
             }
 
