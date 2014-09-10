@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimplementE.VisualStudio.TaskPad.Business;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,7 @@ namespace VSO_Taskpad
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(Session["auth"]==null)
+            if (UserSession.Credentials == null)
             {
                 string url = Page.Request.RawUrl.ToLower();
                 url = VirtualPathUtility.ToAppRelative(url);

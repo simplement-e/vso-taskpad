@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimplementE.VisualStudio.TaskPad.Business.VsoApi;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
@@ -113,6 +114,16 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             return null;
         }
 
+        public static List<UserVsoAccount> GetAccounts(Guid userId)
+        {
+            using (var db = TaskPadDbContext.Get())
+            {
+                var knowns = (from z in db.UserVsoAccounts
+                              where z.UserGuid.Equals(userId)
+                              select z).ToList();
+                return knowns;
+            }
+        }
 
         public static void RefreshAccounts(Guid userId, IEnumerable<VsoApi.Profiles.Account> accounts)
         {
@@ -127,14 +138,14 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                              select z.Name).ToList();
 
                 var lesNew = (from z in accounts
-                              where !names.Contains(z.name)
+                              where !names.Contains(z.accountName)
                               select z).ToList();
                 var lesBoth = (from z in accounts
-                              where names.Contains(z.name)
+                              where names.Contains(z.accountName)
                               select z).ToList();
                 
                 names = (from z in accounts
-                         select z.name).ToList();
+                         select z.accountName).ToList();
 
                 var lesDels = (from z in knowns
                                where !names.Contains(z.Name)
@@ -153,10 +164,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 {
                     UserVsoAccount acc = new UserVsoAccount()
                     {
-                        Guid = l.id,
-                        Label = l.name,
+                        Guid = l.accountId,
+                        Label = l.accountName,
                         UserGuid = userId,
-                        Name = l.name
+                        Name = l.accountName
                     };
                     db.UserVsoAccounts.Add(acc);
                 } 
@@ -164,18 +175,120 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 foreach(var l in lesBoth)
                 {
                     var old = (from z in knowns
-                               where z.Name.Equals(l.name)
+                               where z.Name.Equals(l.accountName)
                                select z).FirstOrDefault();
                     if (old == null)
                         continue;
-                    
-                    old.Label = l.name;
+
+                    old.Label = l.accountName;
                 }
 
                 db.SaveChanges();
             }
 
 
+        }
+
+        public static List<VsoProject> GetAllProjects(Guid userGuid)
+        {
+            using (var db = TaskPadDbContext.Get())
+            {
+
+                var knowns = (from z in db.Projects
+                              where z.UserGuid.Equals(userGuid)
+                                orderby z.Index ascending
+                              select z).ToList();
+                return knowns;
+            }
+        }
+
+        public static void RefreshProjects(Guid userGuid, Guid accountGuid, VsoApi.Project[] prjs)
+        {
+            using (var db = TaskPadDbContext.Get())
+            {
+
+                var knowns = (from z in db.Projects
+                              where z.UserGuid.Equals(userGuid)
+                                && z.AccountGuid.Equals(accountGuid)
+                              select z).ToList();
+
+                var names = (from z in knowns
+                             select z.Name).ToList();
+
+                var lesNew = (from z in prjs
+                              where !names.Contains(z.name)
+                              select z).ToList();
+                var lesBoth = (from z in prjs
+                               where names.Contains(z.name)
+                               select z).ToList();
+
+                names = (from z in prjs
+                         select z.name).ToList();
+
+                var lesDels = (from z in knowns
+                               where !names.Contains(z.Name)
+                               select z).ToList();
+
+                foreach (var l in lesDels)
+                {
+                    db.Projects.Remove(l);
+                }
+
+
+                foreach (var l in lesNew)
+                {
+                    VsoProject acc = new VsoProject()
+                    {
+                        AccountGuid = accountGuid,
+                        UserGuid = userGuid,
+                        Guid = l.id,
+                        Name = l.name,
+                        Label = l.name
+                    };
+                    db.Projects.Add(acc);
+                }
+
+                foreach (var l in lesBoth)
+                {
+                    var old = (from z in knowns
+                               where z.Name.Equals(l.name)
+                               select z).FirstOrDefault();
+                    if (old == null)
+                        continue;
+
+                    old.Label = l.name;
+                }
+
+                db.SaveChanges();
+            }
+        }
+
+        public static bool RefreshCurrentUserFromVso(string username)
+        {
+            VsoWebServiceCredentials vso = UserSession.Credentials;
+            if (vso == null)
+                return false;
+
+            var usr = AccountsBll.GetUser(username);
+            if (usr == null)
+                return false;
+
+            var accounts = Profiles.GetAccounts(vso);
+            AccountsBll.RefreshAccounts(usr.Guid, accounts);
+
+            var accs = AccountsBll.GetAccounts(usr.Guid);
+            UserSession.Accounts = accs.ToArray();
+
+            foreach (var acc in UserSession.Accounts)
+            {
+                var projets = Projects.GetProjects(acc.Name, vso);
+                AccountsBll.RefreshProjects(usr.Guid, acc.Guid, projets);
+            }
+
+            var prjs = AccountsBll.GetAllProjects(usr.Guid);
+            UserSession.AllProjects = prjs.ToArray();
+
+            return true;
         }
     }
 }

@@ -1,5 +1,8 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Taskpad.Master" AutoEventWireup="true" CodeBehind="default.aspx.cs" Inherits="VSO_Taskpad._default" %>
 
+<%@ Register Src="~/AccountHeaderControl.ascx" TagPrefix="uc1" TagName="AccountHeaderControl" %>
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -86,7 +89,7 @@
                     <h2>Create an account</h2>
                     <input type="text" id="txtCreateName" autocomplete="off" placeholder="your name" />
                     <input type="email" id="txtCreateLogin" autocomplete="off" placeholder="your email address" />
-                    <input style="display:none" />
+                    <input style="display: none" />
                     <input type="password" id="txtCreatePassword" autocomplete="off" placeholder="your password" />
                     <button id="lnkCreate">Create account</button>
                 </form>
@@ -98,8 +101,8 @@
             <a href="/oauth/vstudio/start/">VSO Authorize</a>
         </asp:View>
 
-                <asp:View runat="server" ID="vwAuth">
-                    Tout !
+        <asp:View runat="server" ID="vwAuth">
+            <uc1:AccountHeaderControl runat="server" id="AccountHeaderControl" />
         </asp:View>
 
     </asp:MultiView>

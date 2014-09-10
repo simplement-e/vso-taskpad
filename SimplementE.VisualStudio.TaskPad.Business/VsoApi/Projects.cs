@@ -8,9 +8,9 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
 {
     public static class Projects
     {
-        public static Project[] GetProjects(VsoWebServiceCredentials cred)
+        public static Project[] GetProjects(string account, VsoWebServiceCredentials cred)
         {
-            var r = VsoWebServiceHelper.Call<Project[]>(cred, "https://{account}.visualstudio.com/defaultcollection/_apis/projects?api-version=1.0-preview");
+            var r = VsoWebServiceHelper.Call<Project[]>(account, cred, "https://{account}.visualstudio.com/defaultcollection/_apis/projects?api-version=1.0-preview");
             return r.value;
         }
     }

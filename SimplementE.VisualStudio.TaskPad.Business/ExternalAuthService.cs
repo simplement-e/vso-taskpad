@@ -110,39 +110,61 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             }
 
             var ctx = ((HttpApplication)source);
-            if (ctx.Session["auth"] == null && ctx.User.Identity.IsAuthenticated)
+            if (ctx.User.Identity.IsAuthenticated)
             {
-                var usr = AccountsBll.GetUser(ctx.User.Identity.Name);
-                if (usr == null)
-                    return;
-
-                if(!string.IsNullOrEmpty(usr.VsoAccessToken))
+                if (UserSession.Credentials == null)
                 {
-                        try
-                        {
-                            var auth = new VsoOauthCredentials(usr.VsoAccessToken);
-                            var p = Profiles.GetMe(auth);
-                            ctx.Session["auth"] = auth;
-                            return;
-                        }
-                        catch (Exception)
-                        {
-
-                        }
+                    ReloadVsoCredentials(ctx);
                 }
 
-                if (!string.IsNullOrEmpty(usr.VsoRefreshToken))
+                var prjs = UserSession.AllProjects;
+                if(prjs==null || prjs.Length==0)
                 {
-                    try
+                    var usr = AccountsBll.GetUser(ctx.User.Identity.Name);
+                    var accs = AccountsBll.GetAccounts(usr.Guid);
+                    if(accs==null || accs.Count == 0)
+                        AccountsBll.RefreshCurrentUserFromVso(usr.Email);
+                    else
                     {
-                        var token = AuthService.VisualStudioOAuthProcess.RefreshToken(usr.VsoRefreshToken);
-                        AccountsBll.RefreshTokens(usr.Email, token.access_token, token.refresh_token, token.expires_in);
-                        ctx.Session["auth"] = new VsoOauthCredentials(token.access_token);
+                        UserSession.Accounts = accs.ToArray();
+                        UserSession.AllProjects = AccountsBll.GetAllProjects(usr.Guid).ToArray();
                     }
-                    catch(ApplicationException)
-                    {
-                        AccountsBll.RefreshTokens(usr.Email, null, null, 0);
-                    }
+                }
+            }
+        }
+
+        private void ReloadVsoCredentials(HttpApplication ctx)
+        {
+            var usr = AccountsBll.GetUser(ctx.User.Identity.Name);
+            if (usr == null)
+                return;
+
+            if (!string.IsNullOrEmpty(usr.VsoAccessToken))
+            {
+                try
+                {
+                    var auth = new VsoOauthCredentials(usr.VsoAccessToken);
+                    var p = Profiles.GetMe(auth);
+                    UserSession.Credentials = auth;
+                    return;
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+
+            if (!string.IsNullOrEmpty(usr.VsoRefreshToken))
+            {
+                try
+                {
+                    var token = AuthService.VisualStudioOAuthProcess.RefreshToken(usr.VsoRefreshToken);
+                    AccountsBll.RefreshTokens(usr.Email, token.access_token, token.refresh_token, token.expires_in);
+                    UserSession.Credentials = new VsoOauthCredentials(token.access_token);
+                }
+                catch (ApplicationException)
+                {
+                    AccountsBll.RefreshTokens(usr.Email, null, null, 0);
                 }
             }
 

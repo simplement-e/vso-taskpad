@@ -86,7 +86,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
                 AccountsBll.RefreshTokens(context.User.Identity.Name, token.access_token, token.refresh_token, token.expires_in);
 
-                context.Session["auth"] = new VsoOauthCredentials(token.access_token);
+                UserSession.Credentials = new VsoOauthCredentials(token.access_token);
 
 
                 context.Response.Redirect("~/");

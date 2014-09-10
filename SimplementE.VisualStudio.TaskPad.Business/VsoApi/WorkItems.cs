@@ -56,7 +56,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
             public string wiql { get; set; }
         }
 
-        public static WorkItem[] GetBacklog(VsoWebServiceCredentials cred, string project = null)
+        public static WorkItem[] GetBacklog(string account, VsoWebServiceCredentials cred, string project = null)
         {
             StringBuilder blr = new StringBuilder();
             blr.Append("select [System.Id]");
@@ -64,10 +64,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
             blr.Append(" and [System.State] IN ('New','Approved','Committed')");
             if (!string.IsNullOrEmpty(project))
                 blr.Append(" and [System.TeamProject] = @project");
-            return GetWorkItemsFromQuery(cred, blr.ToString(), project);
+            return GetWorkItemsFromQuery(account, cred, blr.ToString(), project);
         }
 
-        private static WorkItem[] GetWorkItemsFromQuery(VsoWebServiceCredentials cred, string queryString, string project = null)
+        private static WorkItem[] GetWorkItemsFromQuery(string account, VsoWebServiceCredentials cred, string queryString, string project = null)
         {
             var qry = new WiqlQuery() { wiql = queryString };
 
@@ -76,7 +76,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
             if(!string.IsNullOrEmpty(project))
                 url += "&@project=" + Uri.EscapeUriString(project);
 
-            var r = VsoWebServiceHelper.Raw(cred,
+            var r = VsoWebServiceHelper.Raw(account, cred,
                 url,
                 "POST", JsonConvert.SerializeObject(qry));
 
@@ -97,7 +97,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
                     res.results.RemoveAt(0);
                 }
 
-                r = VsoWebServiceHelper.Raw(cred,
+                r = VsoWebServiceHelper.Raw(account, cred,
                     "https://{account}.visualstudio.com/defaultcollection/_apis/wit/workitems?ids="
                     + blr.ToString() + " &api-version=1.0-preview",
     "GET");

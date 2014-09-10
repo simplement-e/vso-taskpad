@@ -15,24 +15,12 @@ namespace VSO_Taskpad
         {
             if (!IsPostBack)
             {
-                //if (Session["auth"] != null)
-                //{
-                //    VsoOauthCredentials cred = Session["auth"] as VsoOauthCredentials;
-                //    var r = WorkItems.GetBacklog(cred, "Equihira");
-                //    rptProjects.DataSource = r;
-                //    rptProjects.DataBind();
-                //}
-                //else
-                //{
-                //    Response.Redirect("~/oauth/vstudio/start/");
-                //}
-
                 if (!User.Identity.IsAuthenticated)
                 {
                     mvAuth.SetActiveView(vwNotAuth);
                     Title = "vso-taskpad : work items made easy";
                 }
-                else if (Session["auth"] == null)
+                else if (UserSession.Credentials == null)
                 {
                     mvAuth.SetActiveView(vwAuthNoVso);
                     Title = "vso-taskpad - not connected to vso ";

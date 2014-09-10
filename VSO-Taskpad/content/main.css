@@ -28,6 +28,45 @@ header[role=main] {
     color:#efefef;
 }
 
+    header[role=main] ul {
+        margin:0;
+        padding:0;
+        height:50px;
+        overflow:hidden;
+        list-style-type:none;
+    }
+    header[role=main] ul li {
+        display:inline-block;
+        height:50px;
+        padding:0; margin:0;
+    }
+    header[role=main] ul li a {
+        display:inline-block;
+        margin:0;
+        width:160px;
+        height:20px;
+        text-align:center;
+        padding:15px 15px;
+        text-decoration:none;
+        color:#efefef;
+    }
+        header[role=main] ul li a span {
+            display:inline-block;
+            width:100%;
+            white-space:nowrap;
+            text-overflow:ellipsis;
+            overflow:hidden;
+        }
+        header[role=main] ul li a:hover {
+            background:#f7f7f7;
+            color:#29293C;
+        }
+        header[role=main] ul li a.selected {
+            border-bottom:solid 6px #f7f7f7;
+            height:14px;
+        }
+
+
 header[role=main] .login{
     padding:18px 0 0 10px;
     font-size:12px;
@@ -35,9 +74,31 @@ header[role=main] .login{
     float:right;
 }
 
-section[role=main] {
-    padding:10px;
+div[role=navigation] {
+    height:75px;
+    background:#f7f7f7;
 }
+
+    div[role=navigation] ul {
+        margin:0;
+        padding:0;
+        list-style-type:none;
+    }
+
+    div[role=navigation] ul li {
+        display:inline-block;
+        height:75px;
+    }
+
+    div[role=navigation] ul li A {
+        display:block;
+        height:75px;
+        width:75px;
+    }
+
+        div[role=navigation] ul li A.selected {
+            background:#4282c2;
+    }
 
 .mainLogin {}
 

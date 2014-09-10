@@ -17,21 +17,20 @@ namespace VSO_Taskpad
             base.OnLoad(e);
         }
 
-        protected VsoProject GetProject()
+        protected internal VsoProject GetProject()
         {
             var prj = RouteData.Values["project"];
             if (prj == null)
                 return null;
             string name = prj.ToString();
-            Dictionary<string, VsoProject> prjs = Session["projects"] as Dictionary<string, VsoProject>;
+            var prjs = UserSession.AllProjects;
             if (prjs == null)
             {
-
-            }
-            VsoProject p;
-            if (!prjs.TryGetValue(name, out p))
                 return null;
-            return p;
+            }
+            return (from z in prjs
+                        where z.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)
+                        select z).FirstOrDefault();
         }
     }
 }

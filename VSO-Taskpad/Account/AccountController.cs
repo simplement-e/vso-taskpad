@@ -16,18 +16,9 @@ namespace VSO_Taskpad.Account
         [Route("refreshdata"), HttpGet]
         public bool RefreshData()
         {
-            VsoWebServiceCredentials vso = HttpContext.Current.Session["auth"] as VsoWebServiceCredentials;
-            if (vso == null)
+            if (!User.Identity.IsAuthenticated)
                 return false;
-
-            var usr = AccountsBll.GetUser(User.Identity.Name);
-            if (usr == null)
-                return false;
-
-            var accounts = Profiles.GetAccounts(vso);
-            AccountsBll.RefreshAccounts(usr.Guid, accounts);
-
-            return true;
+            return AccountsBll.RefreshCurrentUserFromVso(User.Identity.Name);
         }
     }
 }

@@ -1,19 +1,17 @@
-﻿using SimplementE.VisualStudio.TaskPad.Business;
-using SimplementE.VisualStudio.TaskPad.Business.VsoApi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace VSO_Taskpad.App
+namespace VSO_Taskpad
 {
-    public partial class Backlog : ProjectPage
+    public partial class AccountHeaderControl : System.Web.UI.UserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-             
+
         }
     }
 }

@@ -10,15 +10,16 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
     {
         public static Profile GetMe(VsoWebServiceCredentials cred)
         {
-            var r = VsoWebServiceHelper.Raw(cred, "https://app.vssps.visualstudio.com/_apis/profile/profiles/me?api-version=1.0-preview.1");
+            var r = VsoWebServiceHelper.Raw(null, cred, "https://app.vssps.visualstudio.com/_apis/profile/profiles/me?api-version=1.0-preview.1");
             return new Profile() { };
         }
 
         public static IEnumerable<Account> GetAccounts(VsoWebServiceCredentials cred)
         {
-            var r = VsoWebServiceHelper.Raw(cred, "https://app.vssps.visualstudio.com/_apis/accounts?api-version=1.0-preview.1");
+            var r = VsoWebServiceHelper.Call<Account[]>(null, cred, "https://app.vssps.visualstudio.com/_apis/accounts?api-version=1.0-preview.1");
+            ////var r2 = VsoWebServiceHelper.Raw(cred, "https://app.vssps.visualstudio.com/_apis/accounts?api-version=1.0-preview.1");
 
-            return null;
+            return r.value;
         }
 
         [Serializable]
@@ -38,8 +39,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
         [Serializable]
         public class Account
         {
-            public string name { get; set; }
-            public Guid id { get; set; }
+            public string accountName { get; set; }
+            public Guid accountId { get; set; }
         }
 
     }

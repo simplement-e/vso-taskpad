@@ -12,6 +12,7 @@ namespace VSO_Taskpad.App_Start
         public static void Register()
         {
             RouteTable.Routes.MapPageRoute("Bugs", "app/{project}/bugs", "~/app/bugs.aspx");
+            RouteTable.Routes.MapPageRoute("ProjectHome", "app/{project}", "~/app/default.aspx");
         }
     }
 }

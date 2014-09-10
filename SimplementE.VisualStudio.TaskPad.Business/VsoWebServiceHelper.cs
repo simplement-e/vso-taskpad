@@ -17,11 +17,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
     /// <summary>
     /// Base class for VSO authentication
     /// </summary>
-    public abstract class VsoWebServiceCredentials
+    public abstract class VsoWebServiceCredentials : ICloneable
     {
-        private string _account;
-
-        public string Account { get; internal set; }
         /// <summary>
         /// Overrides this to provides credentials to the underlying web service request
         /// </summary>
@@ -32,6 +29,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         {
             return false;
         }
+
+        public abstract object Clone();
     }
 
     /// <summary>
@@ -58,7 +57,6 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             var cfg = ConfigurationManager.AppSettings;
             _username = cfg.Get("vso-username");
             _password = cfg.Get("vso-password");
-            Account = cfg.Get("vso-account");
 #if DEBUG
             try
             {
@@ -79,11 +77,6 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                         _username = elmU.InnerText;
                         _password = elmP.InnerText;
                     }
-                    elmU = doc.SelectSingleNode("/Credentials/Account") as XmlElement;
-                    if (elmU != null)
-                    {
-                        Account = elmU.InnerText;
-                    }
                 }
             }
             catch
@@ -103,6 +96,15 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             _username = username;
             _password = password;
         }
+
+        public override object Clone()
+        {
+            VsoBasicCredentials c = new VsoBasicCredentials();
+            c._password = this._password;
+            c._username = this._username;
+            return c;
+        }
+
 
         /// <summary>
         /// Overrides this to provides credentials to the underlying web service request
@@ -157,14 +159,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         {
             var cfg = ConfigurationManager.AppSettings;
             _bearer = bearerToken;
-            Account = "simplement-e";
         }
 
-      
-        public void ChangeAccount(string newAccount)
-        {
-            Account = newAccount;
-        }
 
         /// <summary>
         /// Overrides this to provides credentials to the underlying web service request
@@ -181,6 +177,12 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 throw new ArgumentNullException("info");
 
             _bearer = info.GetString("bearer");
+        }
+
+        public override object Clone()
+        {
+            VsoOauthCredentials c = new VsoOauthCredentials(this._bearer);
+            return c;
         }
 
 
@@ -232,7 +234,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         /// <param name="url">url to call</param>
         /// <param name="verb">http verb to use</param>
         /// <returns>The unparsed string returned by the service</returns>
-        public async static Task<string> RawAsync(VsoWebServiceCredentials credentials, string url, string verb = "GET")
+        public async static Task<string> RawAsync(string account, VsoWebServiceCredentials credentials, string url, string verb = "GET")
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -241,7 +243,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             if (string.IsNullOrEmpty(verb))
                 verb = "GET";
 
-            url = FormatUrl(credentials.Account, url);
+            url = FormatUrl(account, url);
 
             HttpWebResponse rsp = null;
             HttpWebRequest req = HttpWebRequest.Create(url) as HttpWebRequest;
@@ -258,9 +260,9 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             }
         }
 
-        public static VsoJsonResult<T> Call<T>(VsoWebServiceCredentials credentials, string url, string verb = "GET")
+        public static VsoJsonResult<T> Call<T>(string account, VsoWebServiceCredentials credentials, string url, string verb = "GET")
         {
-            string s = Raw(credentials, url, verb);
+            string s = Raw(account, credentials, url, verb);
             return JsonConvert.DeserializeObject<VsoJsonResult<T>>(s);
         }
 
@@ -272,7 +274,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
         /// <param name="url">url to call</param>
         /// <param name="verb">http verb to use</param>
         /// <returns>The unparsed string returned by the service</returns>
-        public static string Raw(VsoWebServiceCredentials credentials, string url, string verb = "GET", string body = null)
+        public static string Raw(string account, VsoWebServiceCredentials credentials, string url, string verb = "GET", string body = null)
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentNullException("url");
@@ -284,7 +286,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 throw new InvalidOperationException("Can't GET if you have a request body to send.");
 
 
-            url = FormatUrl(credentials.Account, url);
+            url = FormatUrl(account, url);
 
             HttpWebResponse rsp = null;
             HttpWebRequest req = HttpWebRequest.Create(url) as HttpWebRequest;

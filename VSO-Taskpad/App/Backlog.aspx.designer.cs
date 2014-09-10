@@ -13,6 +13,15 @@ namespace VSO_Taskpad.App {
     public partial class Backlog {
         
         /// <summary>
+        /// Contrôle ProjectHeaderControl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::VSO_Taskpad.App.ProjectHeaderControl ProjectHeaderControl;
+        
+        /// <summary>
         /// Contrôle lblProject.
         /// </summary>
         /// <remarks>

@@ -47,5 +47,14 @@ namespace VSO_Taskpad {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.View vwAuth;
+        
+        /// <summary>
+        /// Contrôle AccountHeaderControl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::VSO_Taskpad.AccountHeaderControl AccountHeaderControl;
     }
 }
