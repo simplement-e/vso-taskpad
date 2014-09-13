@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
-namespace SimplementE.VisualStudio.TaskPad.Business
+namespace SimplementE.TaskPad.Business
 {
     static class MyConnectionStrings
     {
@@ -31,6 +31,10 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 if (elm != null)
                     Database = elm.InnerText;
 
+                elm = doc.SelectSingleNode("/ConnectionStrings/Slack") as XmlElement;
+                if (elm != null)
+                    Slack = elm.InnerText;
+
                 elm = doc.SelectSingleNode("/ConnectionStrings/VisualStudio") as XmlElement;
                 if (elm != null)
                 {
@@ -43,7 +47,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 }
             }
         }
-
+        public static string Slack { get; private set; }
         public static string Database { get; private set; }
         public static string VisualStudioAppId { get; private set; }
         public static string VisualStudioAppSecret { get; private set; }

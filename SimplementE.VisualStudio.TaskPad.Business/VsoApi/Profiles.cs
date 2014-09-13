@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
+namespace SimplementE.TaskPad.Business.VsoApi
 {
     public class Profiles
     {

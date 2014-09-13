@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace SimplementE.VisualStudio.TaskPad.Business
+namespace SimplementE.TaskPad.Business
 {
     public static class UserSession
     {

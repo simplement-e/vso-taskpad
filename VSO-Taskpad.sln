@@ -5,7 +5,9 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VSO-Taskpad", "VSO-Taskpad\VSO-Taskpad.csproj", "{258ED752-7340-4B47-845B-96E264FB7565}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplementE.VisualStudio.TaskPad.Business", "SimplementE.VisualStudio.TaskPad.Business\SimplementE.VisualStudio.TaskPad.Business.csproj", "{35C4D960-2DFD-4FE6-A0FA-9846C4687297}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplementE.TaskPad.Business", "SimplementE.VisualStudio.TaskPad.Business\SimplementE.TaskPad.Business.csproj", "{35C4D960-2DFD-4FE6-A0FA-9846C4687297}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskpadTestConsole", "TaskpadTestConsole\TaskpadTestConsole.csproj", "{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{35C4D960-2DFD-4FE6-A0FA-9846C4687297}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35C4D960-2DFD-4FE6-A0FA-9846C4687297}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35C4D960-2DFD-4FE6-A0FA-9846C4687297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

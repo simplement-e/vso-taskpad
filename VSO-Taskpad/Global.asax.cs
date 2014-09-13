@@ -1,5 +1,5 @@
 ﻿using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-using SimplementE.VisualStudio.TaskPad.Business;
+using SimplementE.TaskPad.Business;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
@@ -19,6 +19,7 @@ namespace VSO_Taskpad
         public static void PreStartupApplication()
         {
             DynamicModuleUtility.RegisterModule(typeof(AuthService));
+            DynamicModuleUtility.RegisterModule(typeof(VSO_Taskpad.hooks.VsoModule));
         }
 
         protected void Application_Start(object sender, EventArgs e)

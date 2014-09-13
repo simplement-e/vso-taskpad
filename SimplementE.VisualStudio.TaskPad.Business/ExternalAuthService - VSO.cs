@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using Newtonsoft.Json;
 
-namespace SimplementE.VisualStudio.TaskPad.Business
+namespace SimplementE.TaskPad.Business
 {
     partial class AuthService
     {

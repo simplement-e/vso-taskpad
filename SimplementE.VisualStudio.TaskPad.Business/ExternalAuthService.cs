@@ -1,4 +1,4 @@
-﻿using SimplementE.VisualStudio.TaskPad.Business.VsoApi;
+﻿using SimplementE.TaskPad.Business.VsoApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.SessionState;
 
-namespace SimplementE.VisualStudio.TaskPad.Business
+namespace SimplementE.TaskPad.Business
 {
     public partial class AuthService : IHttpModule
     {

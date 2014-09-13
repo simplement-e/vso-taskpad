@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace SimplementE.VisualStudio.TaskPad.Business.VsoApi
+namespace SimplementE.TaskPad.Business.VsoApi
 {
     public static class WorkItems
     {

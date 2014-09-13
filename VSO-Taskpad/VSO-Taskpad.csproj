@@ -59,6 +59,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -195,6 +196,7 @@
     <Compile Include="HeaderControl.ascx.designer.cs">
       <DependentUpon>HeaderControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="hooks\VsoModule.cs" />
     <Compile Include="OAuthError.aspx.cs">
       <DependentUpon>OAuthError.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -215,9 +217,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimplementE.VisualStudio.TaskPad.Business\SimplementE.VisualStudio.TaskPad.Business.csproj">
+    <ProjectReference Include="..\SimplementE.VisualStudio.TaskPad.Business\SimplementE.TaskPad.Business.csproj">
       <Project>{35c4d960-2dfd-4fe6-a0fa-9846c4687297}</Project>
-      <Name>SimplementE.VisualStudio.TaskPad.Business</Name>
+      <Name>SimplementE.TaskPad.Business</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

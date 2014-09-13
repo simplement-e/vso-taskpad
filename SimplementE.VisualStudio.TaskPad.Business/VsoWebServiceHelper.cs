@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml;
 
-namespace SimplementE.VisualStudio.TaskPad.Business
+namespace SimplementE.TaskPad.Business
 {
     /// <summary>
     /// Base class for VSO authentication

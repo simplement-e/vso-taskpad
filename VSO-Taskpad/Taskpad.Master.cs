@@ -1,4 +1,4 @@
-﻿using SimplementE.VisualStudio.TaskPad.Business;
+﻿using SimplementE.TaskPad.Business;
 using System;
 using System.Collections.Generic;
 using System.Linq;

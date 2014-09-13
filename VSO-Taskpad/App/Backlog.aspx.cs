@@ -1,5 +1,5 @@
-﻿using SimplementE.VisualStudio.TaskPad.Business;
-using SimplementE.VisualStudio.TaskPad.Business.VsoApi;
+﻿using SimplementE.TaskPad.Business;
+using SimplementE.TaskPad.Business.VsoApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;

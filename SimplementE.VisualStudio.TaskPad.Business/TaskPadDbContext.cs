@@ -1,4 +1,4 @@
-﻿namespace SimplementE.VisualStudio.TaskPad.Business
+﻿namespace SimplementE.TaskPad.Business
 {
     using System;
     using System.Data.Entity;
@@ -40,7 +40,7 @@
 
         // Votre contexte a été configuré pour utiliser une chaîne de connexion « TaskPadDbContext » du fichier 
         // de configuration de votre application (App.config ou Web.config). Par défaut, cette chaîne de connexion cible 
-        // la base de données « SimplementE.VisualStudio.TaskPad.Business.TaskPadDbContext » sur votre instance LocalDb. 
+        // la base de données « SimplementE.TaskPad.Business.TaskPadDbContext » sur votre instance LocalDb. 
         // 
         // Pour cibler une autre base de données et/ou un autre fournisseur de base de données, modifiez 
         // la chaîne de connexion « TaskPadDbContext » dans le fichier de configuration de l'application.

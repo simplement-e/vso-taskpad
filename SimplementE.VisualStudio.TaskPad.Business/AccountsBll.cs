@@ -1,4 +1,4 @@
-﻿using SimplementE.VisualStudio.TaskPad.Business.VsoApi;
+﻿using SimplementE.TaskPad.Business.VsoApi;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
@@ -7,7 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SimplementE.VisualStudio.TaskPad.Business
+namespace SimplementE.TaskPad.Business
 {
     public static class AccountsBll
     {

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("SimplementE.TaskPad.Business")]
+[assembly: AssemblyTitle("TaskpadTestConsole")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("SimplementE.TaskPad.Business")]
+[assembly: AssemblyProduct("TaskpadTestConsole")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Le GUID suivant est pour l'ID de la typelib si ce projet est exposé à COM
-[assembly: Guid("7a9ad3ab-0016-4512-873a-302644cdd18b")]
+[assembly: Guid("8da38cb6-0808-4cde-9db1-367036ffe4c8")]
 
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //
