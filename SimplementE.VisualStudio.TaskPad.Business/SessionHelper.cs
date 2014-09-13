@@ -15,15 +15,15 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             set { if(HttpContext.Current!=null && HttpContext.Current.Session != null) HttpContext.Current.Session["auth"] = value; }
         }
 
-        public static UserVsoAccount[] Accounts
+        public static UserAccount[] Accounts
         {
-            get { return (HttpContext.Current != null && HttpContext.Current.Session != null) ? HttpContext.Current.Session["accounts"] as UserVsoAccount[] : null; }
+            get { return (HttpContext.Current != null && HttpContext.Current.Session != null) ? HttpContext.Current.Session["accounts"] as UserAccount[] : null; }
             set { if (HttpContext.Current != null && HttpContext.Current.Session != null) HttpContext.Current.Session["accounts"] = value; }
         }
 
-        public static VsoProject[] AllProjects
+        public static Project[] AllProjects
         {
-            get { return (HttpContext.Current != null && HttpContext.Current.Session != null) ? HttpContext.Current.Session["projects"] as VsoProject[] : null; }
+            get { return (HttpContext.Current != null && HttpContext.Current.Session != null) ? HttpContext.Current.Session["projects"] as Project[] : null; }
             set { if (HttpContext.Current != null && HttpContext.Current.Session != null) HttpContext.Current.Session["projects"] = value; }
         }
 

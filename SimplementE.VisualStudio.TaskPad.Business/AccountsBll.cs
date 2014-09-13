@@ -66,7 +66,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             return encpwd;
         }
 
-        public static Guid RegisterNewUser(string name, string username, string pwd)
+        public static Guid RegisterNewUser(string name, string username, string pwd, Guid? tenantGuid = null)
         {
             username = username.ToLower();
             Guid g = Guid.NewGuid();
@@ -75,6 +75,25 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
             using (var db = TaskPadDbContext.Get())
             {
+                Tenant t = null;
+                if (tenantGuid.HasValue)
+                {
+                    t = (from z in db.Tenants
+                         where z.Guid.Equals(tenantGuid.Value)
+                         select z).FirstOrDefault();
+                    if(t==null)
+                        throw new ApplicationException("Unknown tenant");
+                }
+                else
+                {
+                    t = new Tenant()
+                    {
+                        Guid = Guid.NewGuid(),
+                        Name = name,
+                        UserGuidOwner = g
+                    };
+                    db.Tenants.Add(t);
+                }
                 
                 var usr = (from z in db.Users
                            where z.Email.Equals(username)
@@ -84,9 +103,12 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                     throw new ApplicationException("User already exists !");
                 }
 
-
                 usr = new User() { Guid = g, Name = name, Email = username, Password = pwd };
                 db.Users.Add(usr);
+
+                var acc = new UserAccount() { Guid = Guid.NewGuid(), Name = "Default", Label = "Default", TenantGuid = t.Guid, Type = "DEFAULT", UserGuid = g };
+                db.UserAccounts.Add(acc);
+
                 db.SaveChanges();
 
                 return g;
@@ -114,11 +136,11 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             return null;
         }
 
-        public static List<UserVsoAccount> GetAccounts(Guid userId)
+        public static List<UserAccount> GetAccounts(Guid userId)
         {
             using (var db = TaskPadDbContext.Get())
             {
-                var knowns = (from z in db.UserVsoAccounts
+                var knowns = (from z in db.UserAccounts
                               where z.UserGuid.Equals(userId)
                               select z).ToList();
                 return knowns;
@@ -130,8 +152,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
             using (var db = TaskPadDbContext.Get())
             {
 
-                var knowns = (from z in db.UserVsoAccounts
-                           where z.UserGuid.Equals(userId)
+                var knowns = (from z in db.UserAccounts
+                           where z.UserGuid.Equals(userId) && z.Type.Equals("VSO")
                            select z).ToList();
 
                 var names = (from z in knowns
@@ -156,20 +178,21 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                     db.Projects.RemoveRange(from z in db.Projects
                                              where z.AccountGuid.Equals(l.Guid)
                                              select z);
-                    db.UserVsoAccounts.Remove(l);
+                    db.UserAccounts.Remove(l);
                 }
 
 
                 foreach(var l in lesNew)
                 {
-                    UserVsoAccount acc = new UserVsoAccount()
+                    UserAccount acc = new UserAccount()
                     {
                         Guid = l.accountId,
                         Label = l.accountName,
                         UserGuid = userId,
-                        Name = l.accountName
+                        Name = l.accountName,
+                        Type = "VSO"
                     };
-                    db.UserVsoAccounts.Add(acc);
+                    db.UserAccounts.Add(acc);
                 } 
 
                 foreach(var l in lesBoth)
@@ -179,8 +202,6 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                                select z).FirstOrDefault();
                     if (old == null)
                         continue;
-
-                    old.Label = l.accountName;
                 }
 
                 db.SaveChanges();
@@ -189,7 +210,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
         }
 
-        public static List<VsoProject> GetAllProjects(Guid userGuid)
+        public static List<Project> GetAllProjects(Guid userGuid)
         {
             using (var db = TaskPadDbContext.Get())
             {
@@ -210,6 +231,7 @@ namespace SimplementE.VisualStudio.TaskPad.Business
                 var knowns = (from z in db.Projects
                               where z.UserGuid.Equals(userGuid)
                                 && z.AccountGuid.Equals(accountGuid)
+                                && z.Type.Equals("VSO")
                               select z).ToList();
 
                 var names = (from z in knowns
@@ -237,13 +259,14 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
                 foreach (var l in lesNew)
                 {
-                    VsoProject acc = new VsoProject()
+                    Project acc = new Project()
                     {
                         AccountGuid = accountGuid,
                         UserGuid = userGuid,
                         Guid = l.id,
                         Name = l.name,
-                        Label = l.name
+                        Label = l.name,
+                        Type= "VSO"
                     };
                     db.Projects.Add(acc);
                 }
@@ -281,6 +304,8 @@ namespace SimplementE.VisualStudio.TaskPad.Business
 
             foreach (var acc in UserSession.Accounts)
             {
+                if (!acc.Type.Equals("vso", StringComparison.InvariantCultureIgnoreCase))
+                    continue;
                 var projets = Projects.GetProjects(acc.Name, vso);
                 AccountsBll.RefreshProjects(usr.Guid, acc.Guid, projets);
             }

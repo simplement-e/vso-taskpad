@@ -17,7 +17,7 @@ namespace VSO_Taskpad
             base.OnLoad(e);
         }
 
-        protected internal VsoProject GetProject()
+        protected internal Project GetProject()
         {
             var prj = RouteData.Values["project"];
             if (prj == null)
