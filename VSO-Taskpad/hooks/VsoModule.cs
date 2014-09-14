@@ -106,7 +106,7 @@ namespace VSO_Taskpad.hooks
                         //blr.Append(p.resource.url);
                         //blr.Append("|");
                         blr.Append("Check-in #");
-                        //blr.Append(p.resource.changesetId);
+                        blr.Append(p.resource.changesetId);
                         //blr.Append(">");
 
                         blr.Append(" sur le projet ");
