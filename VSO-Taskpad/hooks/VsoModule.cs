@@ -188,8 +188,6 @@ namespace VSO_Taskpad.hooks
                         blr.Append(project);
                         blr.Append(" termine avec le statut *");
                         blr.Append(p.resource.status);
-                        blr.Append("*");
-                        blr.Append(p.resource.comment);
 
                         SlackHelper.SendSimpleWebHookMessage(blr.ToString());
                     }
