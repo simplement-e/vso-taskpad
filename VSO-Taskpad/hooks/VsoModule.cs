@@ -45,10 +45,18 @@ namespace VSO_Taskpad.hooks
                 case "~/hooks/vso/checkedin":
                     ctx.RemapHandler(new VsoCheckedInHandler());
                     break;
+                case "~/hooks/vso/buildcompleted":
+                    ctx.RemapHandler(new VsoBuildCompletedHandler());
+                    break;
             }
         }
 
         #endregion
+        private class MessagePayload
+        {
+            public string text { get; set; }
+        }
+
 
         private class VsoCheckedInHandler : IHttpHandler
         {
@@ -68,11 +76,6 @@ namespace VSO_Taskpad.hooks
                 {
                     return "new event '" + eventType + "' : " + ((message==null)?"-":message.text);
                 }
-            }
-
-            private class MessagePayload
-            {
-                public string text { get; set; }
             }
 
             private class ResourcePayload
@@ -121,6 +124,82 @@ namespace VSO_Taskpad.hooks
             }
         }
 
+        private class VsoBuildCompletedHandler : IHttpHandler
+        {
+            public bool IsReusable
+            {
+                get { return false; }
+            }
+
+            private class CheckedInPayload
+            {
+                public string subscriptionId { get; set; }
+                public string eventType { get; set; }
+                public MessagePayload message { get; set; }
+                public ResourcePayload resource { get; set; }
+
+                public override string ToString()
+                {
+                    return "new event '" + eventType + "' : " + ((message == null) ? "-" : message.text);
+                }
+            }
+
+            private class BuildDefinitionPayload
+            {
+                public string name { get; set; }
+            }
+
+            private class ResourcePayload
+            {
+                public DateTime startTime { get; set; }
+                public DateTime finishTime { get; set; }
+                public string status { get; set; }
+                public string buildNumber { get; set; }
+                public string url { get; set; }
+                public string comment { get; set; }
+                public BuildDefinitionPayload definition { get; set; }
+            }
+
+            public void ProcessRequest(HttpContext context)
+            {
+                CheckedInPayload p = null;
+                using (StreamReader rdr = new StreamReader(context.Request.InputStream))
+                {
+                    string tmp = rdr.ReadToEnd();
+                    p = JsonConvert.DeserializeObject<CheckedInPayload>(tmp);
+                }
+
+                string project = context.Request["project"];
+                Logger.LogInfo(p.ToString());
+
+                ThreadPool.QueueUserWorkItem(o =>
+                {
+                    try
+                    {
+                        StringBuilder blr = new StringBuilder();
+                        //blr.Append("<");
+                        //blr.Append(p.resource.url);
+                        //blr.Append("|");
+                        blr.Append("Build ");
+                        blr.Append(p.resource.definition.name);
+                        //blr.Append(p.resource.changesetId);
+                        //blr.Append(">");
+                        blr.Append(" sur le projet ");
+                        blr.Append(project);
+                        blr.Append(" termine avec le statut *");
+                        blr.Append(p.resource.status);
+                        blr.Append("*");
+                        blr.Append(p.resource.comment);
+
+                        SlackHelper.SendSimpleWebHookMessage(blr.ToString());
+                    }
+                    catch
+                    {
+
+                    }
+                });
+            }
+        }
 
 
     }

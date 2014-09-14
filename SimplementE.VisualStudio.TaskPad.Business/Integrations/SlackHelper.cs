@@ -32,6 +32,7 @@ namespace SimplementE.TaskPad.Business.Integrations
                 return;
 
             playload p = new playload();
+            text = Uri.EscapeDataString(text);
             p.text = text;
             if (string.IsNullOrEmpty(username))
                 p.username = "simplement-e";
