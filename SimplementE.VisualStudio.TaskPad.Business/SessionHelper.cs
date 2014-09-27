@@ -27,5 +27,12 @@ namespace SimplementE.TaskPad.Business
             set { if (HttpContext.Current != null && HttpContext.Current.Session != null) HttpContext.Current.Session["projects"] = value; }
         }
 
+
+        public static UserAccount GetAccountFromProject(Project p)
+        {
+            return (from ac in Accounts
+                    where ac.Guid.Equals(p.AccountGuid)
+                    select ac).FirstOrDefault();
+        }
     }
 }

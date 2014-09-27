@@ -13,7 +13,11 @@ namespace VSO_Taskpad.App
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-             
+            var p = GetProject();
+            var acc = UserSession.GetAccountFromProject(p);
+            var br = WorkItems.GetBacklog(acc.Name, UserSession.Credentials, p.Name);
+            rptProjects.DataSource = br;
+            rptProjects.DataBind();
         }
     }
 }

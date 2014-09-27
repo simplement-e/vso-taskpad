@@ -19,11 +19,17 @@ namespace VSO_Taskpad.App
 
             lnkBugsProject.NavigateUrl = string.Format("~/app/{0}/bugs", prj.Name);
             lnkHomeProject.NavigateUrl = string.Format("~/app/{0}", prj.Name);
+            lnkBacklog.NavigateUrl = string.Format("~/app/{0}/backlog", prj.Name);
+            lnkRoadmap.NavigateUrl = string.Format("~/app/{0}/roadmap", prj.Name);
 
             if (Page is Bugs)
                 lnkBugsProject.CssClass = "selected";
             else if (Page is Default)
                 lnkHomeProject.CssClass = "selected";
+            else if (Page is Roadmap)
+                lnkRoadmap.CssClass = "selected";
+            else if (Page is Backlog)
+                lnkBacklog.CssClass = "selected";
         }
     }
 }

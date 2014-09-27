@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimplementE.TaskPad.Busines
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskpadTestConsole", "TaskpadTestConsole\TaskpadTestConsole.csproj", "{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskpadWebJob", "TaskpadWebJob\TaskpadWebJob.csproj", "{24E4C288-4F82-462B-83D7-AB0B4FD7C942}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B15ED4DA-B80C-4A66-90D0-3E05D3B9BF63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E4C288-4F82-462B-83D7-AB0B4FD7C942}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E4C288-4F82-462B-83D7-AB0B4FD7C942}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E4C288-4F82-462B-83D7-AB0B4FD7C942}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E4C288-4F82-462B-83D7-AB0B4FD7C942}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -23,32 +23,29 @@ button {
 
 
 header[role=main] {
-    background:#29293C;
-    height:50px;
-    color:#efefef;
+    background:#efefef;
+    position:fixed;
+    width:220px;
+    height:100%;
+    top:0; left:0;
+    color:#404142;
 }
 
     header[role=main] ul {
-        margin:0;
-        padding:0;
-        height:50px;
-        overflow:hidden;
         list-style-type:none;
+        margin:0;padding:0;
+
     }
     header[role=main] ul li {
-        display:inline-block;
-        height:50px;
+        display:block;
         padding:0; margin:0;
     }
     header[role=main] ul li a {
         display:inline-block;
         margin:0;
-        width:160px;
-        height:20px;
-        text-align:center;
-        padding:15px 15px;
+        text-align:left;
+        padding:5px;
         text-decoration:none;
-        color:#efefef;
     }
         header[role=main] ul li a span {
             display:inline-block;
@@ -57,22 +54,22 @@ header[role=main] {
             text-overflow:ellipsis;
             overflow:hidden;
         }
-        header[role=main] ul li a:hover {
-            background:#f7f7f7;
-            color:#29293C;
-        }
-        header[role=main] ul li a.selected {
-            border-bottom:solid 6px #f7f7f7;
-            height:14px;
-        }
+
 
 
 header[role=main] .login{
     padding:18px 0 0 10px;
     font-size:12px;
-    width:200px;
-    float:right;
 }
+
+section[role=main] {
+    margin-left:220px;
+}
+
+section[role=main] article {
+    margin:20px;
+}
+
 
 div[role=navigation] {
     height:75px;

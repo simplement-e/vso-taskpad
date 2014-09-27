@@ -13,7 +13,7 @@ namespace SimplementE.TaskPad.Business.VsoApi
         [Serializable]
         private class QueryResult
         {
-            public List<QueryResultItem> results { get; set; }
+            public List<WorkItemRelationIdData> workItems { get; set; }
         }
 
         [Serializable]
@@ -29,18 +29,36 @@ namespace SimplementE.TaskPad.Business.VsoApi
         }
 
         [Serializable]
+        public class WorkItemRelationData
+        {
+            public WorkItemRelationIdData target { get; set; }
+        }
+
+        [Serializable]
+        public class WorkItemRelationIdData
+        {
+            public int id { get; set; }
+            public string url { get; set; }
+        }
+
+        [Serializable]
         private class WorkItemData
         {
             public int id { get; set; }
             public int rev { get; set; }
-            public FieldData[] fields { get; set; }
+            public FieldData fields { get; set; }
         }
 
-        [Serializable]
+        [JsonObject]
         private class FieldData
         {
-            public string value { get; set; }
-            public FieldDesc field { get; set; }
+            [JsonProperty("System.Title")]
+            public string Title { get; set; }
+            [JsonProperty("System.WorkItemType")]
+            public string WorkItemType { get; set; }
+
+            [JsonProperty("System.IterationPath")]
+            public string IterationPath { get; set; }
         }
 
         [Serializable]
@@ -53,7 +71,7 @@ namespace SimplementE.TaskPad.Business.VsoApi
         [Serializable]
         private class WiqlQuery
         {
-            public string wiql { get; set; }
+            public string query { get; set; }
         }
 
         public static WorkItem[] GetBacklog(string account, VsoWebServiceCredentials cred, string project = null)
@@ -69,12 +87,10 @@ namespace SimplementE.TaskPad.Business.VsoApi
 
         private static WorkItem[] GetWorkItemsFromQuery(string account, VsoWebServiceCredentials cred, string queryString, string project = null)
         {
-            var qry = new WiqlQuery() { wiql = queryString };
+            var qry = new WiqlQuery() { query = queryString };
 
 
-            var url = "https://{account}.visualstudio.com/defaultcollection/_apis/wit/queryresults?api-version=1.0-preview";
-            if(!string.IsNullOrEmpty(project))
-                url += "&@project=" + Uri.EscapeUriString(project);
+            var url = "https://{account}.visualstudio.com/defaultcollection/"+ Uri.EscapeUriString(project)+"/_apis/wit/wiql?api-version=1.0-preview.2";
 
             var r = VsoWebServiceHelper.Raw(account, cred,
                 url,
@@ -84,22 +100,22 @@ namespace SimplementE.TaskPad.Business.VsoApi
 
             List<WorkItem> ret = new List<WorkItem>();
 
-            string fields = "System.Id";
+            string fields = "system.id,system.title,system.state";
 
-            while (res.results.Count > 0)
+            while (res.workItems.Count > 0)
             {
                 StringBuilder blr = new StringBuilder();
-                for (int i = 0; i < 200 && res.results.Count > 0; i++)
+                for (int i = 0; i < 200 && res.workItems.Count > 0; i++)
                 {
                     if (i != 0)
                         blr.Append(",");
-                    blr.Append(res.results[0].sourceId);
-                    res.results.RemoveAt(0);
+                    blr.Append(res.workItems[0].id);
+                    res.workItems.RemoveAt(0);
                 }
 
                 r = VsoWebServiceHelper.Raw(account, cred,
                     "https://{account}.visualstudio.com/defaultcollection/_apis/wit/workitems?ids="
-                    + blr.ToString() + " &api-version=1.0-preview",
+                    + blr.ToString() + " &api-version=1.0-preview.2",
     "GET");
                 //+ "&fields=" + fields 
 
@@ -117,15 +133,11 @@ namespace SimplementE.TaskPad.Business.VsoApi
 
         private static WorkItem ConvertToWorkItem(WorkItemData it)
         {
-            string typ = ((from z in it.fields
-                       where z.field.refName.Equals("System.WorkItemType", StringComparison.InvariantCultureIgnoreCase)
-                       select z).FirstOrDefault().value);
-            if (string.IsNullOrEmpty(typ))
+            if (string.IsNullOrEmpty(it.fields.WorkItemType))
                 return null;
 
             WorkItem wk = null;
-
-            switch(typ.ToLower())
+            switch (it.fields.WorkItemType.ToLower())
             {
                 case "product backlog item":
                     wk = new ProductBacklogItem();
@@ -133,18 +145,12 @@ namespace SimplementE.TaskPad.Business.VsoApi
                 case "bug":
                     wk = new BugItem();
                     break;
+                case "feature":
+                    wk = new FeatureItem();
+                    break;
             }
-            if (wk != null)
-            {
-                typ = ((from z in it.fields
-                        where z.field.refName.Equals("System.Title", StringComparison.InvariantCultureIgnoreCase)
-                        select z).FirstOrDefault().value);
-                wk.label = typ;
-                typ = ((from z in it.fields
-                        where z.field.refName.Equals("System.IterationPath", StringComparison.InvariantCultureIgnoreCase)
-                        select z).FirstOrDefault().value);
-                wk.iterationPath = typ;
-            }
+
+            wk.label = it.fields.Title;
             return wk;
         }
     }
@@ -163,6 +169,11 @@ namespace SimplementE.TaskPad.Business.VsoApi
     }
 
     public class BugItem : WorkItem
+    {
+
+    }
+
+    public class FeatureItem : WorkItem
     {
 
     }

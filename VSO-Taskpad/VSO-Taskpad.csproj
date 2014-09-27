@@ -92,7 +92,9 @@
     <Content Include="App\Backlog.aspx" />
     <Content Include="App\Bugs.aspx" />
     <Content Include="App\Default.aspx" />
+    <Content Include="App\Integrations\BugSnag.aspx" />
     <Content Include="App\ProjectHeaderControl.ascx" />
+    <Content Include="App\Roadmap.aspx" />
     <Content Include="Connections.xml" />
     <Content Include="content\toastr.css" />
     <Content Include="content\toastr.min.css" />
@@ -169,12 +171,26 @@
     <Compile Include="App\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="App\Integrations\BugSnag.aspx.cs">
+      <DependentUpon>BugSnag.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App\Integrations\BugSnag.aspx.designer.cs">
+      <DependentUpon>BugSnag.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App\ProjectHeaderControl.ascx.cs">
       <DependentUpon>ProjectHeaderControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="App\ProjectHeaderControl.ascx.designer.cs">
       <DependentUpon>ProjectHeaderControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="App\Roadmap.aspx.cs">
+      <DependentUpon>Roadmap.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="App\Roadmap.aspx.designer.cs">
+      <DependentUpon>Roadmap.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />

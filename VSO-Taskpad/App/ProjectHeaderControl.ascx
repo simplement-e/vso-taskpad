@@ -7,6 +7,12 @@
                 <asp:HyperLink runat="server" ID="lnkHomeProject" NavigateUrl="./"><span></span></asp:HyperLink>
             </li>
             <li class="bugsProject">
+                <asp:HyperLink runat="server" ID="lnkRoadmap" NavigateUrl="./Roadmap"><span></span></asp:HyperLink>
+            </li>
+            <li class="bugsProject">
+                <asp:HyperLink runat="server" ID="lnkBacklog" NavigateUrl="./Backlog"><span></span></asp:HyperLink>
+            </li>
+            <li class="bugsProject">
                 <asp:HyperLink runat="server" ID="lnkBugsProject" NavigateUrl="./Bugs"><span></span></asp:HyperLink>
             </li>
 

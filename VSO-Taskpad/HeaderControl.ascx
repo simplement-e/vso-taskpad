@@ -7,6 +7,11 @@
         <li class="home">
             <asp:HyperLink runat="server" ID="lnkHome" NavigateUrl="~/"><span>Home</span></asp:HyperLink>
         </li>
+        </ul>
+
+        <div class="projets">
+        <h2>Projets</h2>
+    <ul>
         <asp:Repeater runat="server" ID="rptProjects">
             <ItemTemplate>
                 <li class="project">
@@ -18,5 +23,6 @@
         </asp:Repeater>
     </ul>
 
+            </div>
 </header>
 
