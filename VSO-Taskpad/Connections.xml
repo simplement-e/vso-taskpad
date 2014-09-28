@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ConnectionStrings>
+  <Database>Server=tcp:ag6jpr4l4g.database.windows.net,1433;Database=vsotaskpad;User ID=vsoadmin@ag6jpr4l4g;Password=sl-110977;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;</Database>
+  <VisualStudio>
+    <Key>07C18C91-72BA-4C71-8AC6-617BFAB5246C</Key>
+    <Secret>eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im9PdmN6NU1fN3AtSGpJS2xGWHo5M3VfVjBabyJ9.eyJjaWQiOiIwN2MxOGM5MS03MmJhLTRjNzEtOGFjNi02MTdiZmFiNTI0NmMiLCJjc2kiOiIzMTUxZmExYS1lMDM2LTRjMGMtYWU0OS0yZGUwNzBkN2E5ZmYiLCJuYW1laWQiOiIwOTk3YjEwNi1mZmU1LTQ3OTgtOTA1Ni1hNDkyNzZhYzY0ZTQiLCJpc3MiOiJhcHAudnNzcHMudmlzdWFsc3R1ZGlvLmNvbSIsImF1ZCI6ImFwcC52c3Nwcy52aXN1YWxzdHVkaW8uY29tIiwibmJmIjoxNDEwMTE0ODY5LCJleHAiOjE0NDE2NTA4Njl9.v52AkLDNzEcNSDnSp1vFCSQ1FBl8_8a71J1B76V6kFyrj2W-XARkhV9TKlr9gEUI9OSPYn3sCwaIYdIQo5wGdSGjsYiZU4cNO65zz-4MID4o7Zsp54sjOfKcQQhytw8HUn-KdFTnSgabGGifrFqdVFUiA-sugjt1xTKEBSQeFWrQaZ2yjH-TFIumG_U25gFocAB0huGn6QyAzdCVFMwL9mQn2pFEYmmlf8HVyeHOc723rtKcuVX73X1slbESdVwVr2yolkeDzk-STYuifCnrHpsS5jUjqUi7xilh0T11_orKa4dda0s_FK-Z3B-Oi0YB2mInvlaJeblcTZ6IuO3Y5w</Secret>
+  </VisualStudio>
+</ConnectionStrings>
