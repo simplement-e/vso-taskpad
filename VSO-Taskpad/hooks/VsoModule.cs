@@ -97,6 +97,9 @@ namespace VSO_Taskpad.hooks
                 string project = context.Request["project"];
                 Logger.LogInfo(p.ToString());
 
+                if (p.resource.comment.ToUpper().Contains("**NO_CI***"))
+                    return;
+
                 ThreadPool.QueueUserWorkItem(o =>
                 {
                     try
